@@ -1,5 +1,6 @@
-package com.steam.steam.user;
+package com.steam.steam.user.dto;
 
+import com.steam.steam.user.Region;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,5 +1,10 @@
 package com.steam.steam.user;
 
+import com.steam.steam.user.dto.LoginDto;
+import com.steam.steam.user.dto.UserDto;
+import com.steam.steam.user.exception.PasswordValidationException;
+import com.steam.steam.user.exception.UserAlreadyExistsException;
+import com.steam.steam.user.exception.UserIdNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,12 +35,15 @@ public class UserController {
             return ResponseEntity.ok().body("{\"message\": \"region_error\"}");
         }
     }
-//    @PostMapping("/login")
-//    public String loginUser(@RequestBody User user) {
-//        if (userService.login(user)) {
-//            return "Login successful.";
-//        } else {
-//            return "Login failed. Invalid credentials.";
-//        }
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto) {
+        try {
+            userService.login(loginDto);
+            return ResponseEntity.ok().body("{\"message\": \"success\"}");
+        } catch (UserIdNotExistsException e){
+            return ResponseEntity.ok().body("{\"message\": \"id_error\"}");
+        } catch (PasswordValidationException e){
+            return ResponseEntity.ok().body("{\"message\": \"pw_error\"}");
+        }
+    }
 }

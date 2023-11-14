@@ -1,5 +1,7 @@
 package com.steam.steam.user;
 
+import com.steam.steam.user.dto.UserDto;
+
 public class UserMapper {
 
     public static User toEntity(UserDto userDto) {
