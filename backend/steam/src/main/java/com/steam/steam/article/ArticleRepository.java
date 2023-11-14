@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findAllByOrderByTimeDesc();
-    List<Article> findByRegionOrderByTimeDesc(Region region);
+    List<Article> findAllByOrderByCreatedTimeDesc();
+    List<Article> findByRegionOrderByCreatedTimeDesc(Region region);
 }

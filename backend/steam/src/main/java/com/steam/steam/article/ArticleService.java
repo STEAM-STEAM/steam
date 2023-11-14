@@ -22,19 +22,19 @@ public class ArticleService {
         this.articleMapper = articleMapper;
     }
 
-    public void createArticle(ArticleRequestDto articleDto) throws MalformedURLException {
+    public void createArticle(ArticleRequestDto articleDto) {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
     }
 
     public List<ArticleSummary> getRecentArticles() {
-        List<Article> articles = articleRepository.findAllByOrderByTimeDesc();
+        List<Article> articles = articleRepository.findAllByOrderByCreatedTimeDesc();
         return toArticleSummaries(articles);
     }
 
 
     public List<ArticleSummary> getRecentArticlesByRegion(String region) {
-        List<Article> articles = articleRepository.findByRegionOrderByTimeDesc(Region.valueOf(region));
+        List<Article> articles = articleRepository.findByRegionOrderByCreatedTimeDesc(Region.valueOf(region));
         return toArticleSummaries(articles);
     }
 

@@ -18,7 +18,7 @@ public class ArticleMapper {
         this.userRepository = userRepository;
     }
 
-    public Article toEntity(ArticleRequestDto articleDto) throws MalformedURLException {
+    public Article toEntity(ArticleRequestDto articleDto) {
         User user = userRepository.getReferenceById(articleDto.userId());
         return new Article(articleDto.title(), articleDto.content(), articleDto.price(), user);
     }

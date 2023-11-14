@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,22 +22,22 @@ public class Article {
 
     private Integer price;
 
-    private LocalDateTime time;
+    private LocalDateTime createdTime;
 
     @ManyToOne
     private User user;
 
-    private URL imgUrl;
+    private String imgUrl;
 
     private Region region;
 
-    public Article(String title, String content, Integer price, User user) throws MalformedURLException {
+    public Article(String title, String content, Integer price, User user) {
         this.title = title;
         this.content = content;
         this.price = price;
         this.user = user;
         this.region = user.getRegion();
-        this.time = LocalDateTime.now();
-        this.imgUrl = new URL("example");
+        this.createdTime = LocalDateTime.now();
+        this.imgUrl = "example";
     }
 }
