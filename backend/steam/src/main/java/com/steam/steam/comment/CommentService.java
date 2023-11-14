@@ -21,8 +21,8 @@ public class CommentService {
 
     @Transactional
     public void write(CommentRequestDto commentRequestDto) {
-        User writer = userRepository.findById(commentRequestDto.getUserId());
-        Article article = articleRepository.findById(commentRequestDto.getArticleId());
+        User writer = userRepository.findById(commentRequestDto.getUserId()).get();
+        Article article = articleRepository.findById(commentRequestDto.getArticleId()).get();
         LocalDateTime createTime = LocalDateTime.now();
 
         Comment comment = new Comment();

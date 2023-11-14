@@ -24,7 +24,7 @@ public class UserService {
     public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException {
         User user = UserMapper.toEntity(userDto);
 
-        if (userRepository.findById(user.getUserId()).isPresent()) {
+        if (userRepository.findById(user.getId()).isPresent()) {
             throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
         }
         // 지금 사용하지 않을 임의 기준
