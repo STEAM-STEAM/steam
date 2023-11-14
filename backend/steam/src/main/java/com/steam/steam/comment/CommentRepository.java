@@ -22,4 +22,8 @@ public class CommentRepository {
 
         return query.getResultList();
     }
+
+    public void save(Comment comment) {
+        em.persist(comment);
+    }
 }

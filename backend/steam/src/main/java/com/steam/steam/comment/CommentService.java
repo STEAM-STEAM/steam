@@ -16,6 +16,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
+
+    @Transactional
+    public void write(CommentRequestDto commentRequestDto) {
+        User writer = userRepository.findById(commentRequestDto.getUserId());
+        Article article = articleRepository.findById(commentRequestDto.getArticleId());
+        LocalDateTime createTime = LocalDateTime.now();
+
+        Comment comment = new Comment();
+        comment.setUser(writer);
+        comment.setContent(commentRequestDto.getContent());
+        comment.setCreateTime(createTime);
+        comment.setArticle(article);
+
+        commentRepository.save(comment);
+    }
 
     public List<Comment> getAllComment(String articleId) {
         return commentRepository.findAllById(articleId);

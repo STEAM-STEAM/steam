@@ -25,4 +25,11 @@ public class CommentController {
 
         return ResponseEntity.ok(allCommentResponseDto);
     }
+
+    @PostMapping("/comment")
+    public String write(CommentRequestDto commentRequestDto){
+        commentService.write(commentRequestDto);
+
+        return "OK";
+    }
 }
