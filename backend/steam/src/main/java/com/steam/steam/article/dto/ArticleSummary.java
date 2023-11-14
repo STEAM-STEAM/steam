@@ -7,5 +7,5 @@ public record ArticleSummary(
         String title,
         Integer price,
         String userNickname,
-        URL imgLinkUrl
+        String imgLinkUrl
 ) {}

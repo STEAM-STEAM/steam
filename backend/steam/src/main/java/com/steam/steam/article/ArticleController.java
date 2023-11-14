@@ -23,11 +23,7 @@ public class ArticleController {
 
     @PostMapping("/article")
     public ResponseEntity<Object> createArticle(@RequestBody ArticleRequestDto requestDto) {
-        try {
-            articleService.createArticle(requestDto);
-        } catch (MalformedURLException e) {
-            return ResponseEntity.ok().body(new MessageResponseDto("image_url_error"));
-        }
+        articleService.createArticle(requestDto);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 

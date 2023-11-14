@@ -8,5 +8,5 @@ public record ArticleDetail(
         Integer price,
         String sellerNickname,
         String sellerId,
-        URL imgLinkUrl
+        String imgLinkUrl
 ) {}
