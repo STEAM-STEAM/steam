@@ -34,7 +34,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<Comment> getAllComment(String articleId) {
+    public List<Comment> getAllComment(Long articleId) {
         return commentRepository.findAllById(articleId);
     }
 }
