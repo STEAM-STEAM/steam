@@ -5,6 +5,7 @@ import com.steam.steam.user.dto.UserRequestDto;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
+import com.steam.steam.user.exception.UserIdValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException {
+    public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
 
+        if (user.getId().length() < 8) {
+            throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
+        }
+        if (user.getPw().length() < 8) {
+            throw new PasswordValidationException("[ERROR] 회원가입 비밀번호 형식 아님");
+        }
         if (userRepository.findById(user.getId()).isPresent()) {
             throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
-        }
-        // 지금 사용하지 않을 임의 기준
-        if (user.getPw().length() < 1) {
-            throw new PasswordValidationException("[ERROR] 회원가입 비밀번호 형식 불일치");
         }
         userRepository.save(user);
     }
