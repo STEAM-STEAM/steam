@@ -1,7 +1,8 @@
 package com.steam.steam.user;
 
-import com.steam.steam.user.dto.LoginDto;
-import com.steam.steam.user.dto.UserDto;
+import com.steam.steam.user.dto.LoginRequestDto;
+import com.steam.steam.user.dto.MessageResponseDto;
+import com.steam.steam.user.dto.UserRequestDto;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
@@ -23,27 +24,28 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Object> joinUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<MessageResponseDto> joinUser(@RequestBody UserRequestDto userDto) {
         try {
             userService.join(userDto);
-            return ResponseEntity.ok().body("{\"message\": \"success\"}");
+            return ResponseEntity.ok().body(new MessageResponseDto("success"));
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.ok().body("{\"message\": \"id_error\"}");
+            return ResponseEntity.ok().body(new MessageResponseDto("id_error"));
         } catch (PasswordValidationException e) {
-            return ResponseEntity.ok().body("{\"message\": \"pw_error\"}");
+            return ResponseEntity.ok().body(new MessageResponseDto("pw_error"));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.ok().body("{\"message\": \"region_error\"}");
+            return ResponseEntity.ok().body(new MessageResponseDto("region_error"));
         }
     }
+
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<MessageResponseDto> loginUser(@RequestBody LoginRequestDto loginDto) {
         try {
             userService.login(loginDto);
-            return ResponseEntity.ok().body("{\"message\": \"success\"}");
-        } catch (UserIdNotExistsException e){
-            return ResponseEntity.ok().body("{\"message\": \"id_error\"}");
-        } catch (PasswordValidationException e){
-            return ResponseEntity.ok().body("{\"message\": \"pw_error\"}");
+            return ResponseEntity.ok().body(new MessageResponseDto("success"));
+        } catch (UserIdNotExistsException e) {
+            return ResponseEntity.ok().body(new MessageResponseDto("id_error"));
+        } catch (PasswordValidationException e) {
+            return ResponseEntity.ok().body(new MessageResponseDto("pw_error"));
         }
     }
 }

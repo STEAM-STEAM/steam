@@ -1,7 +1,7 @@
 package com.steam.steam.user;
 
-import com.steam.steam.user.dto.LoginDto;
-import com.steam.steam.user.dto.UserDto;
+import com.steam.steam.user.dto.LoginRequestDto;
+import com.steam.steam.user.dto.UserRequestDto;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
@@ -21,7 +21,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void join(UserDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException {
+    public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException {
         User user = UserMapper.toEntity(userDto);
 
         if (userRepository.findById(user.getUserId()).isPresent()) {
@@ -34,7 +34,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(LoginDto loginDto) throws UserIdNotExistsException, PasswordValidationException {
+    public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException {
         Optional<User> optionalUser = userRepository.findById(loginDto.userId());
 
         if (optionalUser.isEmpty()) {
