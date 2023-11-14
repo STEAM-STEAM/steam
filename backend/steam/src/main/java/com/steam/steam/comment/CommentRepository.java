@@ -11,10 +11,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentRepository {
     private final EntityManager em;
-    public List<Comment> findAllById(String articleId) {
+    public List<Comment> findAllById(Long articleId) {
         TypedQuery<Comment> query = em.createQuery(
                 "select c from Comment c " +
-                        "where c.article_id = :article_id",
+                        "where c.article.id = :article_id",
                 Comment.class
         );
 
