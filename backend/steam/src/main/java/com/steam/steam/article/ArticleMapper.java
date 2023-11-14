@@ -7,6 +7,8 @@ import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
+
 @Component
 public class ArticleMapper {
     private final UserRepository userRepository;
@@ -16,7 +18,7 @@ public class ArticleMapper {
         this.userRepository = userRepository;
     }
 
-    public Article toEntity(ArticleRequestDto articleDto) {
+    public Article toEntity(ArticleRequestDto articleDto) throws MalformedURLException {
         User user = userRepository.getReferenceById(articleDto.userId());
         return new Article(articleDto.title(), articleDto.content(), articleDto.price(), user);
     }
@@ -24,6 +26,6 @@ public class ArticleMapper {
     public ArticleDetail toArticleDetail(Article article) {
         return new ArticleDetail(
                 article.getTitle(), article.getContent(), article.getPrice(),
-                article.getUser().getNickname(), article.getUser().getUserId());
+                article.getUser().getNickname(), article.getUser().getUserId(), article.getImgUrl());
     }
 }

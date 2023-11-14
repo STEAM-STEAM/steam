@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,11 @@ public class ArticleController {
 
     @PostMapping("/article")
     public ResponseEntity<Object> createArticle(@RequestBody ArticleRequestDto requestDto) {
-        articleService.createArticle(requestDto);
+        try {
+            articleService.createArticle(requestDto);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.ok().body(new MessageResponseDto("image_url_error"));
+        }
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 

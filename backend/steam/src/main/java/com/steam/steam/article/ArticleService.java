@@ -7,6 +7,7 @@ import com.steam.steam.user.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ArticleService {
         this.articleMapper = articleMapper;
     }
 
-    public void createArticle(ArticleRequestDto articleDto) {
+    public void createArticle(ArticleRequestDto articleDto) throws MalformedURLException {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
     }
@@ -44,7 +45,8 @@ public class ArticleService {
                     article.getId(),
                     article.getTitle(),
                     article.getPrice(),
-                    article.getUser().getNickname()
+                    article.getUser().getNickname(),
+                    article.getImgUrl()
             ));
         }
         return articleSummary;
