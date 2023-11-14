@@ -1,5 +1,6 @@
 package com.steam.steam.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,15 +13,16 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "users")
 public class User {
     @Id
-    private String userId;
+    @Column(name = "user_id")
+    private String id;
 
     private String pw;
     private Region region;
     private String nickname;
-    private String profilePicture;
+    private String profileImgUrl;
 
-    public User(String userId, String pw, String nickname, String region) throws IllegalArgumentException {
-        this.userId = userId;
+    public User(String id, String pw, String nickname, String region) throws IllegalArgumentException {
+        this.id = id;
         this.nickname = nickname;
         this.region = Region.valueOf(region);
         this.pw = pw;
