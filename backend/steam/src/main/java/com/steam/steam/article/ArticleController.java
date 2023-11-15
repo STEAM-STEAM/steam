@@ -27,13 +27,13 @@ public class ArticleController {
     }
 
 
-    @GetMapping("/recent")
+    @GetMapping("/articles/recent")
     public ResponseEntity<List<ArticleSummary>> getRecentArticles() {
         List<ArticleSummary> articles = articleService.getRecentArticles();
         return ResponseEntity.ok().body(articles);
     }
 
-    @GetMapping("/recent/{region}")
+    @GetMapping("/articles/recent/{region}")
     public ResponseEntity<List<ArticleSummary>> getRecentArticlesByRegion(@PathVariable String region) {
         List<ArticleSummary> articles = articleService.getRecentArticlesByRegion(region);
         return ResponseEntity.ok().body(articles);
