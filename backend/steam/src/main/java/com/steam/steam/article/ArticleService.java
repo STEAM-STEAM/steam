@@ -19,16 +19,17 @@ public class ArticleService {
     private final ArticleMapper articleMapper;
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
+    private final PurchaseRequestRepository purchaseRequestRepository;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper,
-                          UserRepository userRepository, HeartRepository heartRepository) {
+    public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper, UserRepository userRepository,
+                          HeartRepository heartRepository, PurchaseRequestRepository purchaseRequestRepository) {
         this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
         this.userRepository = userRepository;
         this.heartRepository = heartRepository;
+        this.purchaseRequestRepository = purchaseRequestRepository;
     }
-
 
     public void createArticle(ArticleRequestDto articleDto) {
         Article article = articleMapper.toEntity(articleDto);
@@ -91,6 +92,11 @@ public class ArticleService {
         }
     }
 
+    private void decrementHeartCount(User user, Article article) {
+        article.decrementHeartCount();
+        heartRepository.deleteByUserAndArticle(user, article);
+    }
+
     private void incrementHeartCount(User user, Article article) {
         article.incrementHeartCount();
 
@@ -98,8 +104,22 @@ public class ArticleService {
         heartRepository.save(heart);
     }
 
-    private void decrementHeartCount(User user, Article article) {
-        article.decrementHeartCount();
-        heartRepository.deleteByUserAndArticle(user, article);
+    @Transactional
+    public String changePurchaseStatus(PurchaseRequestDto purchaseRequestDto) {
+        String userId = purchaseRequestDto.userId();
+        Long articleId = purchaseRequestDto.articleId();
+
+        User user = userRepository.findById(userId).get();
+        Article article = articleRepository.findById(articleId).get();
+
+        List<PurchaseRequest> byUserAndArticle = purchaseRequestRepository.findByUserAndArticle(user, article);
+        if(byUserAndArticle.size() > 0){
+            purchaseRequestRepository.deleteByUserAndArticle(user, article);
+            return "purchase request cancel";
+        }else{
+            PurchaseRequest purchaseRequest = new PurchaseRequest(user, article);
+            purchaseRequestRepository.save(purchaseRequest);
+            return "purchase request success";
+        }
     }
 }
