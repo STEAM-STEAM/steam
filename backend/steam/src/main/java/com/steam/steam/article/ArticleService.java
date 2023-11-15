@@ -3,6 +3,7 @@ package com.steam.steam.article;
 import com.steam.steam.article.dto.ArticleDetail;
 import com.steam.steam.article.dto.ArticleRequestDto;
 import com.steam.steam.article.dto.ArticleSummary;
+import com.steam.steam.article.dto.SearchRequestDto;
 import com.steam.steam.user.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,13 @@ public class ArticleService {
     public ArticleDetail getArticleDetail(Long articleId) {
         Article article = articleRepository.getReferenceById(articleId);
         return articleMapper.toArticleDetail(article);
+    }
+
+    public List<ArticleSummary> getRecentArticlesOnSearch(SearchRequestDto requestDto) {
+        List<Article> articles = articleRepository.findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc(
+                Region.valueOf(requestDto.region()), requestDto.keyword(), requestDto.minPrice(), requestDto.maxPrice()
+        );
+
+        return toArticleSummaries(articles);
     }
 }

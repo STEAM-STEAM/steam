@@ -1,9 +1,6 @@
 package com.steam.steam.article;
 
-import com.steam.steam.article.dto.ArticleDetail;
-import com.steam.steam.article.dto.ArticleRequestDto;
-import com.steam.steam.article.dto.ArticleSummary;
-import com.steam.steam.article.dto.MessageResponseDto;
+import com.steam.steam.article.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +42,12 @@ public class ArticleController {
     public ResponseEntity<ArticleDetail> getArticleById(@PathVariable Long article_id) {
         ArticleDetail article = articleService.getArticleDetail(article_id);
         return ResponseEntity.ok().body(article);
+    }
+
+    @GetMapping("/article/search")
+    public ResponseEntity<List<ArticleSummary>> searchEntities(@RequestBody SearchRequestDto requestDto) {
+        List<ArticleSummary> articles = articleService.getRecentArticlesOnSearch(requestDto);
+
+        return ResponseEntity.ok().body(articles);
     }
 }
