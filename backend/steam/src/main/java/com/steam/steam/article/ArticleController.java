@@ -2,6 +2,7 @@ package com.steam.steam.article;
 
 import com.steam.steam.article.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ArticleController {
     private final ArticleService articleService;
 
@@ -47,7 +48,12 @@ public class ArticleController {
     @GetMapping("/article/search")
     public ResponseEntity<List<ArticleSummary>> searchEntities(@RequestBody SearchRequestDto requestDto) {
         List<ArticleSummary> articles = articleService.getRecentArticlesOnSearch(requestDto);
-
         return ResponseEntity.ok().body(articles);
+    }
+
+    @PostMapping("/article/heart")
+    public ResponseEntity determineHeartCount(@RequestBody HeartRequestDto heartRequestDto){
+        String like = articleService.changeHeartCount(heartRequestDto);
+        return new ResponseEntity<>(like, HttpStatus.OK);
     }
 }
