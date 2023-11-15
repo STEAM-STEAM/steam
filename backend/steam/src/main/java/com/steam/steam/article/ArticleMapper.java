@@ -26,6 +26,7 @@ public class ArticleMapper {
     public ArticleDetail toArticleDetail(Article article) {
         return new ArticleDetail(
                 article.getTitle(), article.getContent(), article.getPrice(),
-                article.getUser().getNickname(), article.getUser().getId(), article.getImgUrl());
+                article.getUser().getNickname(), article.getUser().getId(),
+                article.getImgUrl(), article.getHeartCount());
     }
 }

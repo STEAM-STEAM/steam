@@ -30,6 +30,7 @@ public class Article {
     private String imgUrl;
 
     private Region region;
+    private Integer heartCount;
 
     public Article(String title, String content, Integer price, User user) {
         this.title = title;
@@ -39,5 +40,14 @@ public class Article {
         this.region = user.getRegion();
         this.createdTime = LocalDateTime.now();
         this.imgUrl = "example";
+        this.heartCount = 0;
+    }
+
+    public Integer incrementHeartCount(){
+        return this.heartCount++;
+    }
+
+    public Integer decrementHeartCount(){
+        return this.heartCount--;
     }
 }
