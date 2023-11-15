@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -55,5 +54,23 @@ public class ArticleController {
     public ResponseEntity determineHeartCount(@RequestBody HeartRequestDto heartRequestDto){
         String like = articleService.changeHeartCount(heartRequestDto);
         return new ResponseEntity<>(like, HttpStatus.OK);
+    }
+
+    @PostMapping("/article/purchase")
+    public ResponseEntity determinePurchase(@RequestBody PurchaseRequestDto purchaseRequestDto){
+        String purchase = articleService.changePurchaseStatus(purchaseRequestDto);
+        return new ResponseEntity<>(purchase, HttpStatus.OK);
+    }
+
+    @GetMapping("/article/purchase/request/{articleId}")
+    public ResponseEntity<List<PurchaseRequestResponse>> getPurchaseRequests(@PathVariable Long articleId) {
+        List<PurchaseRequestResponse> purchaseRequests = articleService.getPurchaseRequests(articleId);
+        return ResponseEntity.ok().body(purchaseRequests);
+    }
+
+    @PostMapping("/article/purchase/confirm")
+    public ResponseEntity purchaseConfirm(@RequestBody PurchaseConfirm purchaseConfirm){
+        articleService.purchaseConfirm(purchaseConfirm);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }

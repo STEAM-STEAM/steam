@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -19,16 +17,20 @@ public class ArticleService {
     private final ArticleMapper articleMapper;
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
+    private final PurchaseRequestRepository purchaseRequestRepository;
+    private final HistoryRepository historyRepository;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper,
-                          UserRepository userRepository, HeartRepository heartRepository) {
+                          UserRepository userRepository, HeartRepository heartRepository,
+                          PurchaseRequestRepository purchaseRequestRepository, HistoryRepository historyRepository) {
         this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
         this.userRepository = userRepository;
         this.heartRepository = heartRepository;
+        this.purchaseRequestRepository = purchaseRequestRepository;
+        this.historyRepository = historyRepository;
     }
-
 
     public void createArticle(ArticleRequestDto articleDto) {
         Article article = articleMapper.toEntity(articleDto);
@@ -91,6 +93,11 @@ public class ArticleService {
         }
     }
 
+    private void decrementHeartCount(User user, Article article) {
+        article.decrementHeartCount();
+        heartRepository.deleteByUserAndArticle(user, article);
+    }
+
     private void incrementHeartCount(User user, Article article) {
         article.incrementHeartCount();
 
@@ -98,8 +105,60 @@ public class ArticleService {
         heartRepository.save(heart);
     }
 
-    private void decrementHeartCount(User user, Article article) {
-        article.decrementHeartCount();
-        heartRepository.deleteByUserAndArticle(user, article);
+    @Transactional
+    public String changePurchaseStatus(PurchaseRequestDto purchaseRequestDto) {
+        String userId = purchaseRequestDto.userId();
+        Long articleId = purchaseRequestDto.articleId();
+
+        User user = userRepository.findById(userId).get();
+        Article article = articleRepository.findById(articleId).get();
+
+        List<PurchaseRequest> byUserAndArticle = purchaseRequestRepository.findByUserAndArticle(user, article);
+        if(byUserAndArticle.size() > 0){
+            purchaseRequestRepository.deleteByUserAndArticle(user, article);
+            return "purchase request cancel";
+        }else{
+            PurchaseRequest purchaseRequest = new PurchaseRequest(user, article);
+            purchaseRequestRepository.save(purchaseRequest);
+            return "purchase request success";
+        }
+    }
+
+    public List<PurchaseRequestResponse> getPurchaseRequests(Long articleId) {
+        Article article = articleRepository.findById(articleId).get();
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
+
+        return toPurchaseRequestResponse(purchaseRequests);
+    }
+
+    private static List<PurchaseRequestResponse> toPurchaseRequestResponse(List<PurchaseRequest> purchaseRequests) {
+        List<PurchaseRequestResponse> purchaseRequestResponses = new ArrayList<>();
+        for (PurchaseRequest purchaseRequest : purchaseRequests) {
+            purchaseRequestResponses.add(new PurchaseRequestResponse(
+                    purchaseRequest.getUser().getId(),
+                    purchaseRequest.getUser().getNickname()
+            ));
+        }
+        return purchaseRequestResponses;
+    }
+
+    @Transactional
+    public void purchaseConfirm(PurchaseConfirm purchaseConfirm) {
+        String userId = purchaseConfirm.userId();
+        Long articleId = purchaseConfirm.articleId();
+
+        User purchaser = userRepository.findById(userId).get();
+        Article article = articleRepository.findById(articleId).get();
+        User seller = article.getUser();
+
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
+
+        purchaseRequests.forEach(purchaseRequest -> {
+            if(purchaseRequest.getUser().equals(purchaser)){
+                History history = new History(seller, article, purchaser);
+                historyRepository.save(history);
+            }
+            purchaseRequestRepository.delete(purchaseRequest);
+        });
     }
 }
