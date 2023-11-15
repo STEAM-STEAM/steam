@@ -1,5 +1,6 @@
 package com.steam.steam.article;
 
+import com.steam.steam.FileStorageService;
 import com.steam.steam.article.dto.*;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
@@ -7,11 +8,8 @@ import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -30,9 +28,12 @@ public class ArticleService {
     }
 
 
-    public void createArticle(ArticleRequestDto articleDto) {
+    public Long createArticle(ArticleRequestDto articleDto) {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
+        Long id = article.getId();
+        article.setImgUrl(FileStorageService.getArticleImageSavePath(id) + "/onlyOnePicture.jpg");
+        return id;
     }
 
     public List<ArticleSummary> getRecentArticles() {

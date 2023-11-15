@@ -51,4 +51,8 @@ public class Article {
     public Integer decrementHeartCount(){
         return this.heartCount--;
     }
+
+    public void setImgUrl(String url) {
+        this.imgUrl = url;
+    }
 }
