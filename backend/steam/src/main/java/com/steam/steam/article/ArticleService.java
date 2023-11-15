@@ -18,15 +18,18 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
     private final PurchaseRequestRepository purchaseRequestRepository;
+    private final HistoryRepository historyRepository;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper, UserRepository userRepository,
-                          HeartRepository heartRepository, PurchaseRequestRepository purchaseRequestRepository) {
+    public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper,
+                          UserRepository userRepository, HeartRepository heartRepository,
+                          PurchaseRequestRepository purchaseRequestRepository, HistoryRepository historyRepository) {
         this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
         this.userRepository = userRepository;
         this.heartRepository = heartRepository;
         this.purchaseRequestRepository = purchaseRequestRepository;
+        this.historyRepository = historyRepository;
     }
 
     public void createArticle(ArticleRequestDto articleDto) {
@@ -139,7 +142,23 @@ public class ArticleService {
         return purchaseRequestResponses;
     }
 
+    @Transactional
     public void purchaseConfirm(PurchaseConfirm purchaseConfirm) {
+        String userId = purchaseConfirm.userId();
+        Long articleId = purchaseConfirm.articleId();
 
+        User purchaser = userRepository.findById(userId).get();
+        Article article = articleRepository.findById(articleId).get();
+        User seller = article.getUser();
+
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
+
+        purchaseRequests.forEach(purchaseRequest -> {
+            if(purchaseRequest.getUser().equals(purchaser)){
+                History history = new History(seller, article, purchaser);
+                historyRepository.save(history);
+            }
+            purchaseRequestRepository.delete(purchaseRequest);
+        });
     }
 }
