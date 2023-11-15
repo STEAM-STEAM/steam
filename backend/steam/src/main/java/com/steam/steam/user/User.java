@@ -1,9 +1,7 @@
 package com.steam.steam.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.steam.steam.article.Article;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +15,7 @@ public class User {
     private String id;
 
     private String pw;
+    @Enumerated(EnumType.STRING)
     private Region region;
     private String nickname;
     private String profileImgUrl;

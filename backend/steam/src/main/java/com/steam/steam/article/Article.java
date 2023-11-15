@@ -29,6 +29,7 @@ public class Article {
 
     private String imgUrl;
 
+    @Enumerated(EnumType.STRING)
     private Region region;
     private Integer heartCount;
 
