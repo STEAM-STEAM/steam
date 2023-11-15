@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -121,5 +119,27 @@ public class ArticleService {
             purchaseRequestRepository.save(purchaseRequest);
             return "purchase request success";
         }
+    }
+
+    public List<PurchaseRequestResponse> getPurchaseRequests(Long articleId) {
+        Article article = articleRepository.findById(articleId).get();
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
+
+        return toPurchaseRequestResponse(purchaseRequests);
+    }
+
+    private static List<PurchaseRequestResponse> toPurchaseRequestResponse(List<PurchaseRequest> purchaseRequests) {
+        List<PurchaseRequestResponse> purchaseRequestResponses = new ArrayList<>();
+        for (PurchaseRequest purchaseRequest : purchaseRequests) {
+            purchaseRequestResponses.add(new PurchaseRequestResponse(
+                    purchaseRequest.getUser().getId(),
+                    purchaseRequest.getUser().getNickname()
+            ));
+        }
+        return purchaseRequestResponses;
+    }
+
+    public void purchaseConfirm(PurchaseConfirm purchaseConfirm) {
+
     }
 }

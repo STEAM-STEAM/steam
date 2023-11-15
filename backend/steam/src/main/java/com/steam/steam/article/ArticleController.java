@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -27,13 +26,13 @@ public class ArticleController {
     }
 
 
-    @GetMapping("/recent")
+    @GetMapping("/articles/recent")
     public ResponseEntity<List<ArticleSummary>> getRecentArticles() {
         List<ArticleSummary> articles = articleService.getRecentArticles();
         return ResponseEntity.ok().body(articles);
     }
 
-    @GetMapping("/recent/{region}")
+    @GetMapping("/articles/recent/{region}")
     public ResponseEntity<List<ArticleSummary>> getRecentArticlesByRegion(@PathVariable String region) {
         List<ArticleSummary> articles = articleService.getRecentArticlesByRegion(region);
         return ResponseEntity.ok().body(articles);
@@ -63,5 +62,15 @@ public class ArticleController {
         return new ResponseEntity<>(purchase, HttpStatus.OK);
     }
 
+    @GetMapping("/article/purchase/request/{articleId}")
+    public ResponseEntity<List<PurchaseRequestResponse>> getPurchaseRequests(@PathVariable Long articleId) {
+        List<PurchaseRequestResponse> purchaseRequests = articleService.getPurchaseRequests(articleId);
+        return ResponseEntity.ok().body(purchaseRequests);
+    }
 
+    @PostMapping("/article/purchase/confirm")
+    public ResponseEntity purchaseConfirm(@RequestBody PurchaseConfirm purchaseConfirm){
+        articleService.purchaseConfirm(purchaseConfirm);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
 }
