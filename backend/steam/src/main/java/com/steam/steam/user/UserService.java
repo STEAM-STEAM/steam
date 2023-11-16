@@ -2,6 +2,7 @@ package com.steam.steam.user;
 
 import com.steam.steam.user.dto.LoginRequestDto;
 import com.steam.steam.user.dto.UserRequestDto;
+import com.steam.steam.user.dto.UserResponseDto;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
@@ -56,9 +57,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String getUserProfileImageUrl(String userId) {
+    public UserResponseDto getUserInfo(String userId) {
         User user = userRepository.getReferenceById(userId);
-        return user.getProfileImgUrl();
+        return UserMapper.toResponseDto(user);
     }
 }
 
