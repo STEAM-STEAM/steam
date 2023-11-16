@@ -168,17 +168,17 @@ public class ArticleService {
 
         User purchaser = userRepository.findById(userId).get();
         Article article = articleRepository.findById(articleId).get();
-        User seller = article.getUser();
 
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
 
         purchaseRequests.forEach(purchaseRequest -> {
             if(purchaseRequest.getUser().equals(purchaser)){
-                History history = new History(seller, article, purchaser);
+                History history = articleMapper.toHistory(article, purchaser);
                 historyRepository.save(history);
             }
             purchaseRequestRepository.delete(purchaseRequest);
         });
+        articleRepository.deleteById(article.getId());
     }
 
     public List<ArticleSummary> getArticlesByHeartOfUser(String userId) {
@@ -211,7 +211,8 @@ public class ArticleService {
 
     public List<ArticleSummary> getArticlesOfPurchaseByUser(String userId) {
         User user = userRepository.getReferenceById(userId);
-        List<Article> articles = purchaseRequestRepository.findByUser(user);
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUser(user);
+        List<Article> articles = articleMapper.toArticleFromPurchaseRequest(purchaseRequests);
         return articleMapper.toArticleSummaries(articles);
     }
 }

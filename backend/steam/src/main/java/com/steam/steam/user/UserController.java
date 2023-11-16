@@ -90,8 +90,8 @@ public class UserController {
 
     @PostMapping("/user/keyword")
     public ResponseEntity<MessageResponseDto> addKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
-        userService.addKeywordOfUser(keywordRequestDto);
-        return ResponseEntity.ok().body(new MessageResponseDto("success"));
+        String message = userService.addKeywordOfUser(keywordRequestDto);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
     }
 
     @DeleteMapping("/user/keyword")

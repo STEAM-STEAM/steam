@@ -7,6 +7,9 @@ import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -31,11 +34,12 @@ public class ArticleMapper {
 
         String imgDir = article.getImgDir();
         List<String> imgUrls = findJpgFiles(Path.of(imgDir));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return new ArticleDetail(
                 article.getTitle(), article.getContent(), article.getPrice(),
                 article.getUser().getNickname(), article.getUser().getId(),
-                imgUrls, article.getHeartCount());
+                imgUrls, article.getHeartCount(), article.getCreatedTime().format(formatter));
     }
 
     private List<String> findJpgFiles(Path imgDir) {
@@ -72,7 +76,21 @@ public class ArticleMapper {
 
     public List<Article> toArticleFromHistory(List<History> historiesOfSell) {
         List<Article> articles = new ArrayList<>();
-        historiesOfSell.forEach(history -> articles.add(history.getArticle()));
+        historiesOfSell.forEach(history -> {
+            articles.add(new Article(history.getTitle(), history.getContent(), history.getPrice(), history.getSeller()));
+        });
         return articles;
+    }
+
+    public List<Article> toArticleFromPurchaseRequest(List<PurchaseRequest> purchaseRequests) {
+        List<Article> articles = new ArrayList<>();
+        purchaseRequests.forEach(purchaseRequest -> articles.add(purchaseRequest.getArticle()));
+        return articles;
+    }
+
+    public History toHistory(Article article, User purchaser) {
+        return new History(article.getUser(), purchaser, article.getTitle(), article.getContent(),
+                article.getPrice(), LocalDateTime.now(), article.getImgDir(),
+                article.getRegion(), article.getHeartCount());
     }
 }

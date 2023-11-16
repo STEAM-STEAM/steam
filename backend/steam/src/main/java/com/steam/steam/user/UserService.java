@@ -74,10 +74,23 @@ public class UserService {
     }
 
     @Transactional
-    public void addKeywordOfUser(KeywordRequestDto keywordRequestDto) {
+    public String addKeywordOfUser(KeywordRequestDto keywordRequestDto) {
         User user = userRepository.getReferenceById(keywordRequestDto.userId());
+        if(checkIfUserHasAKeyword(user, keywordRequestDto.keyword())){
+            return "already exist";
+        }
         Keyword keyword = new Keyword(user, keywordRequestDto.keyword());
         keywordRepository.save(keyword);
+        return "success";
+    }
+
+    private boolean checkIfUserHasAKeyword(User user, String keyword) {
+        List<Keyword> keywords = keywordRepository.findByUser(user);
+        for (Keyword candidateKeyword : keywords) {
+            if(candidateKeyword.getKeyword().equals(keyword))
+                return true;
+        }
+        return false;
     }
 
     @Transactional
