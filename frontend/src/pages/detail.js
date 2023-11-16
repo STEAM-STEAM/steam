@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "@emotion/styled";
 import SimpleImageSlider from "react-simple-image-slider";
+import Modal from 'react-modal';
 
 const Container = styled.div`
     width: 100%;
@@ -41,6 +42,62 @@ const LikeBtn = styled.button`
     border: 1px solid #D41536;
     margin-right: 20px;
 `;
+
+const SellBtn = styled.button`
+    width: 100%;
+    height: 40px;
+    background: #1DA1F2;
+    color: #fff;
+    border: none;
+`;
+
+const List = styled.div`
+    width: 100%;
+    float: left;
+    padding: 0 20px;
+
+    & > div {
+        width: 100%;
+        float: left;
+        margin-bottom: 5px;
+        // border-bottom: solid 1px #ddd;
+    }
+    & > div > * {
+        float: left;
+        
+    }
+    & > div > button{
+        float: right;
+    }
+`;
+
+const customModalStyles = {
+    overlay: {
+        backgroundColor: " rgba(0, 0, 0, 0.4)",
+        width: "100vw",
+        height: "100vh",
+        zIndex: "10",
+        position: "fixed",
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0"
+    },
+    content: {
+        width: "400px",
+        height: "auto",
+        position: "relative",
+        zIndex: "150",
+        inset: "50% 0 0 50%",
+        transform: "translate(-50%, -50%)",
+        borderRadius: "10px",
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+        backgroundColor: "white",
+        justifyContent: "center",
+        overflow: "auto",
+        margin: 0
+    },
+};
 
 const publicUrl = process.env.PUBLIC_URL+"/assets/images/";
 
@@ -103,14 +160,72 @@ const Detail = () => {
         { url: publicUrl+"image2.png" },
         { url: publicUrl+"images/2.jpg" },
         { url: publicUrl+"images/3.jpg" },
-        { url: publicUrl+"images/4.jpg" },
-        { url: publicUrl+"images/5.jpg" },
-        { url: publicUrl+"images/6.jpg" },
-        { url: publicUrl+"images/7.jpg" },
+        { url: publicUrl+"images/4.jpg" }
     ];
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [sellModalOpen, setSellModalOpen] = useState(false);
+
+    const PopupMessage = ({ message }) => {
+        return (
+            <Modal
+                isOpen={modalOpen}
+                onRequestClose={() => setModalOpen(false)}
+                style={customModalStyles}
+                ariaHideApp={false}
+                contentLabel="Pop up Message"
+                shouldCloseOnOverlayClick={false}
+            >
+                <div style={{width: "100%", float: "left", padding: 20, textAlign: "center"}}>
+                    <p style={{fontSize: 22, fontWeight: 500, marginBottom: 10}}>{message}</p>
+                    <p style={{marginBottom: 10}}>구매를 신청하겠습니까?</p>
+                    <button style={{width: 100, height: 40, background: "#fff", color: "#1DA1F2", border: "solid 1px #1DA1F2"}} onClick={() => setModalOpen(false)}>취소</button>
+                    <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "none", marginLeft: 10}} onClick={() => setModalOpen(false)}>확인</button>
+                </div>
+            </Modal>
+    )}
+
+    const SellPopupMessage = ({ message }) => {
+        return (
+            <Modal
+                isOpen={sellModalOpen}
+                onRequestClose={() => setSellModalOpen(false)}
+                style={customModalStyles}
+                ariaHideApp={false}
+                contentLabel="Pop up Message"
+                shouldCloseOnOverlayClick={false}
+            >
+                <div style={{width: "100%", float: "left", padding: 20, textAlign: "center"}}>
+                    <p style={{fontSize: 22, fontWeight: 500, marginBottom: 5}}>{message}</p>
+                    <p style={{marginBottom: 20, fontSize: 18}}>구매자 확정</p>
+                    <List>
+                        <div>
+                            <p>유저1</p>
+                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
+                        </div>
+                        <div>
+                            <p>유저1</p>
+                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
+                        </div>
+                        <div>
+                            <p>유저1</p>
+                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
+                        </div>
+                        <div>
+                            <p>유저1</p>
+                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
+                        </div>
+                    </List>
+                    <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "solid 1px #fff"}} onClick={() => setSellModalOpen(false)}>취소</button>
+                </div>
+            </Modal>
+    )}
 
     return (
         <div style={{width: "100%", float: "left"}}>
+            <PopupMessage message={"핸드크림 새상품"} />
+            <SellPopupMessage message={"핸드크림 새상품"} />
+
             <div style={{width: 1000, float: "left", left: "50%", transform: "translateX(-50%)"}}>
                 <p style={{fontSize: 25, fontWeight: 500, marginTop: 50, color: "#333"}}>상품 상세</p>
                 <Container>
@@ -145,12 +260,18 @@ const Detail = () => {
                                     <span style={{float: "left"}}> 관심등록</span>
                                 </span>
                             </LikeBtn>
-                            <BuyBtn>
+                            <BuyBtn onClick={() => setModalOpen(true)}>
                                 <span style={{float: "left", left: "50%", transform: "translateX(-50%)"}}>
                                     <span className="material-symbols-outlined" style={{float: "left"}}>local_mall</span>
                                     <span style={{float: "left"}}> 구매신청</span>
                                 </span>
                             </BuyBtn>
+                            <SellBtn onClick={() => setSellModalOpen(true)}>
+                                <span style={{float: "left", left: "50%", transform: "translateX(-50%)"}}>
+                                    <span className="material-symbols-outlined" style={{float: "left"}}>local_mall</span>
+                                    <span style={{float: "left"}}> 판매자 확정</span>
+                                </span>
+                            </SellBtn>
                         </div>
                     </div>
                 </Container>
@@ -162,9 +283,9 @@ const Detail = () => {
                 <div style={{padding: 30, float: "left", borderBottom: "1px solid #111"}}>
                     <p style={{fontSize: 20, fontWeight: 500, marginBottom: 10}}>상품 상세 정보</p>
                     <p>
-                    Aesop 크렘 드 파퓨메 No.01 르 블랑<br/>
-                    (Aesop 크렘 드 파퓨메 1호 르 블랑 50ml + Aesop 사봉 드 파퓨메 1호 르 블랑 65g수분포함 / 45g건조시 + Aesop 크렘 드 파퓨메 트레이 1ea)<br/>
-                    💛포장 뜯지 않은 새 상품이며 박스상태는 사진 참고해주세요
+                        Aesop 크렘 드 파퓨메 No.01 르 블랑<br/>
+                        (Aesop 크렘 드 파퓨메 1호 르 블랑 50ml + Aesop 사봉 드 파퓨메 1호 르 블랑 65g수분포함 / 45g건조시 + Aesop 크렘 드 파퓨메 트레이 1ea)<br/>
+                        💛포장 뜯지 않은 새 상품이며 박스상태는 사진 참고해주세요
                     </p>
                 </div>
                 <Comment />

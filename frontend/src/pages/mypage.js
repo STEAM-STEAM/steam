@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "@emotion/styled";
 import MainItem from "../components/mainItem";
-
+import Modal from 'react-modal';
 
 const Profile = styled.div`
     width: 20%;
@@ -44,12 +44,66 @@ const Tag = styled.span`
     color: #1DA1F2;
 `;
 
+const customModalStyles = {
+    overlay: {
+        backgroundColor: " rgba(0, 0, 0, 0.4)",
+        width: "100vw",
+        height: "100vh",
+        zIndex: "10",
+        position: "fixed",
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0"
+    },
+    content: {
+        width: "400px",
+        height: "auto",
+        position: "relative",
+        zIndex: "150",
+        inset: "50% 0 0 50%",
+        transform: "translate(-50%, -50%)",
+        borderRadius: "10px",
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+        backgroundColor: "white",
+        justifyContent: "center",
+        overflow: "auto",
+        margin: 0
+    },
+};
+
 const ProfileInfo = () => {
     const publicUrl = process.env.PUBLIC_URL;
     const profile_img = "image1.png";
 
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const PopupMessage = () => {
+        return (
+            <Modal
+                isOpen={modalOpen}
+                onRequestClose={() => setModalOpen(false)}
+                style={customModalStyles}
+                ariaHideApp={false}
+                contentLabel="Pop up Message"
+                shouldCloseOnOverlayClick={false}
+            >
+                <div style={{width: "100%", float: "left", padding: 20, textAlign: "center"}}>
+                    <p style={{fontSize: 22, fontWeight: 500, marginBottom: 10}}>키워드 추가하기</p>
+                    <div style={{width: "100%", float: "left"}}>
+                        <input placeholder="키워드를 입력해주세요."
+                            style={{width: "100%", height: 40, border: "solid 1px #ddd", borderRadius: 5, padding: 10, marginBottom: 10}}
+                        />
+                    </div>
+                    <button style={{width: 100, height: 40, background: "#fff", color: "#1DA1F2", border: "solid 1px #1DA1F2"}} onClick={() => setModalOpen(false)}>취소</button>
+                    <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "none", marginLeft: 10}} onClick={() => setModalOpen(false)}>확인</button>
+                </div>
+            </Modal>
+    )}
+
     return (
         <Profile>
+            <PopupMessage />
             <div>
                 <div>
                     <p><b style={{fontSize: 18}}>유저 닉네임</b></p>
@@ -61,7 +115,7 @@ const ProfileInfo = () => {
             </div>
             <div>
                 <span>관심 키워드</span>
-                <KeywordBtn>키워드 추가</KeywordBtn>
+                <KeywordBtn onClick={() => setModalOpen(true)}>키워드 추가</KeywordBtn>
             </div>
             <div>
                 <Tag>#냉장고</Tag>
