@@ -16,4 +16,8 @@ input, textarea, select, button {
   border-radius: 5px;
 }
 
-a {color : black; text-decoration: none;}
+button {
+  cursor: pointer;
+}
+
+a {color : black; text-decoration: none; cursor: pointer;}

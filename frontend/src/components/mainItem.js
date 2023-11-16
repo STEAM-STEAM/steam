@@ -6,7 +6,6 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const Item = styled.div`
     width: calc((100% - 60px) / 4);
-    height: 450px;
     border-radius: 5px;
     float: left;
     margin-top: 20px;
@@ -28,13 +27,11 @@ const Item = styled.div`
         font-size: 14px;
     }
     & > a > div > p:nth-of-type(2) {
-        font-size: 18px;
         color: #111;
-
     }
+
     & > a > div > p:last-of-type {
         color: #111;
-        font-size: 18px;
         font-weight: bold;
     }
 `;
