@@ -12,7 +12,6 @@ import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 
 @Component
 public class ArticleMapper {
@@ -63,5 +62,17 @@ public class ArticleMapper {
         });
 
         return articleSummaries;
+    }
+
+    public List<Article> toArticleFromHearts(List<Heart> hearts) {
+        List<Article> articles = new ArrayList<>();
+        hearts.forEach(heart -> articles.add(heart.getArticle()));
+        return articles;
+    }
+
+    public List<Article> toArticleFromHistory(List<History> historiesOfSell) {
+        List<Article> articles = new ArrayList<>();
+        historiesOfSell.forEach(history -> articles.add(history.getArticle()));
+        return articles;
     }
 }

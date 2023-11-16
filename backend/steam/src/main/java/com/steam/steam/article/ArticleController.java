@@ -97,5 +97,10 @@ public class ArticleController {
         return ResponseEntity.ok().body(articles);
     }
 
+    @GetMapping("/article/history/sell/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getHistoryOfSellByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getHistoryOfSellByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
 
 }

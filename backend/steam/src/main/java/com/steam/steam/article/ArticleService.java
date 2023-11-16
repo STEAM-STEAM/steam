@@ -184,11 +184,15 @@ public class ArticleService {
     public List<ArticleSummary> getArticlesByHeartOfUser(String userId) {
         User user = userRepository.getReferenceById(userId);
         List<Heart> hearts = heartRepository.findByUser(user);
-        List<Article> articles = new ArrayList<>();
-        hearts.forEach(heart -> {
-            articles.add(heart.getArticle());
-        });
+        List<Article> articles = articleMapper.toArticleFromHearts(hearts);
 
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getHistoryOfSellByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<History> historyOfSell = historyRepository.findBySeller(user);
+        List<Article> articles = articleMapper.toArticleFromHistory(historyOfSell);
         return articleMapper.toArticleSummaries(articles);
     }
 }
