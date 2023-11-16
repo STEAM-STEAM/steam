@@ -2,9 +2,9 @@ import React,{useEffect, useState} from "react";
 import styled from "@emotion/styled";
 import Select from 'react-select'
 import axios from 'axios'
-// import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const JoinFrm = styled.div`
     width: 100%;
@@ -57,7 +57,6 @@ const Join = () => {
     const [pw, setPw] = useState('');
     const [region, setRegion] = useState('서울');
     const [nickname, setNickname] = useState('');
-
     // useEffect(() => {
     //     console.log(userId, pw, region, nickname);
     // }
