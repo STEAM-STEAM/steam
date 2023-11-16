@@ -10,4 +10,6 @@ import java.util.List;
 public interface HeartRepository extends JpaRepository<Heart, Long> {
     Long deleteByUserAndArticle(User user, Article article);
     List<Heart> findByUserAndArticle(User user, Article article);
+
+    List<Heart> findByUser(User user);
 }

@@ -2,6 +2,7 @@ package com.steam.steam.article;
 
 import com.steam.steam.article.dto.ArticleDetail;
 import com.steam.steam.article.dto.ArticleRequestDto;
+import com.steam.steam.article.dto.ArticleSummary;
 import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,15 @@ public class ArticleMapper {
             }
         } catch (IOException e) { }
         return imgUrls;
+    }
+
+    public List<ArticleSummary> toArticleSummaries(List<Article> articles){
+        List<ArticleSummary> articleSummaries = new ArrayList<>();
+        articles.forEach(article -> {
+            articleSummaries.add(new ArticleSummary(article.getId(), article.getTitle(),
+                    article.getPrice(), article.getUser().getNickname(), article.getImgDir()));
+        });
+
+        return articleSummaries;
     }
 }

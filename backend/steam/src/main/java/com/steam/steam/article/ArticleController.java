@@ -91,5 +91,11 @@ public class ArticleController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
+    @GetMapping("/article/heart/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesByHeartOfUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesByHeartOfUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
 
 }

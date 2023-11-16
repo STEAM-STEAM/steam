@@ -180,4 +180,15 @@ public class ArticleService {
             purchaseRequestRepository.delete(purchaseRequest);
         });
     }
+
+    public List<ArticleSummary> getArticlesByHeartOfUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Heart> hearts = heartRepository.findByUser(user);
+        List<Article> articles = new ArrayList<>();
+        hearts.forEach(heart -> {
+            articles.add(heart.getArticle());
+        });
+
+        return articleMapper.toArticleSummaries(articles);
+    }
 }
