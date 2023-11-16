@@ -1,6 +1,7 @@
 package com.steam.steam.article.dto;
 
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Builder;
 
-public record ArticleRequestDto(String userId, String title, String content, Integer price, MultipartFile image) {
+@Builder
+public record ArticleRequestDto(String userId, String title, String content, Integer price) {
 }

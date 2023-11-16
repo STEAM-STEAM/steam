@@ -1,6 +1,6 @@
 package com.steam.steam.article.dto;
 
-import java.net.URL;
+import java.util.List;
 
 public record ArticleDetail(
         String title,
@@ -8,6 +8,6 @@ public record ArticleDetail(
         Integer price,
         String sellerNickname,
         String sellerId,
-        String imgLinkUrl,
+        List<String> imgLinkUrl,
         Integer heartCount
 ) {}

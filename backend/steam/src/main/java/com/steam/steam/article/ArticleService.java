@@ -8,6 +8,7 @@ import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,23 +23,36 @@ public class ArticleService {
     private final PurchaseRequestRepository purchaseRequestRepository;
     private final HistoryRepository historyRepository;
 
+    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
+    private final FileStorageService fileStorageService;
+
     @Autowired
     public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper,
                           UserRepository userRepository, HeartRepository heartRepository,
-                          PurchaseRequestRepository purchaseRequestRepository, HistoryRepository historyRepository) {
+                          PurchaseRequestRepository purchaseRequestRepository, HistoryRepository historyRepository, FileStorageService fileStorageService) {
         this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
         this.userRepository = userRepository;
         this.heartRepository = heartRepository;
         this.purchaseRequestRepository = purchaseRequestRepository;
         this.historyRepository = historyRepository;
+        this.fileStorageService = fileStorageService;
     }
 
-    public Long createArticle(ArticleRequestDto articleDto, Path imageDir) {
+    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
         Long id = article.getId();
-        article.setImgUrl(imageDir.resolve(id + ".jpg"));
+
+        Path imageDir = articleImageDir.resolve(String.valueOf(id));
+        List<Path> filePaths = new ArrayList<>();
+        for(int i=0; i<images.size(); i++) {
+            filePaths.add(imageDir.resolve(i + ".jpg"));
+        }
+
+        fileStorageService.storeImages(images, filePaths);
+        filePaths.forEach(path -> article.setImgDir(imageDir));
+
         return id;
     }
 
@@ -61,7 +75,7 @@ public class ArticleService {
                     article.getTitle(),
                     article.getPrice(),
                     article.getUser().getNickname(),
-                    article.getImgUrl()
+                    article.getImgDir() + "/0.jpg"
             ));
         }
         return articleSummary;

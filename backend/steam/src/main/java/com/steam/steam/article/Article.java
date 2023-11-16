@@ -28,7 +28,7 @@ public class Article {
     @ManyToOne
     private User user;
 
-    private String imgUrl;
+    private String imgDir;
 
     @Enumerated(EnumType.STRING)
     private Region region;
@@ -41,7 +41,7 @@ public class Article {
         this.user = user;
         this.region = user.getRegion();
         this.createdTime = LocalDateTime.now();
-        this.imgUrl = "example";
+        this.imgDir = "example";
         this.heartCount = 0;
     }
 
@@ -53,7 +53,7 @@ public class Article {
         return this.heartCount--;
     }
 
-    public void setImgUrl(Path url) {
-        this.imgUrl = url.toString();
+    public void setImgDir(Path url) {
+        this.imgDir = url.toString();
     }
 }

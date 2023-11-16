@@ -1,6 +1,5 @@
 package com.steam.steam.article;
 
-import com.steam.steam.FileStorageService;
 import com.steam.steam.article.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -17,15 +14,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class ArticleController {
     private final ArticleService articleService;
-    private final FileStorageService fileStorageService;
 
-    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
 
     @Autowired
-    public ArticleController(ArticleService articleService,
-                             FileStorageService fileStorageService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -35,15 +28,16 @@ public class ArticleController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("price") Integer price,
-            @RequestParam("image") MultipartFile image) {
+            @RequestParam("image") List<MultipartFile> images) {
 
-        ArticleRequestDto requestDto = new ArticleRequestDto(userId, title, content, price, image);
-        Long articleId = articleService.createArticle(requestDto, articleImageDir);
-        Path imagePath = articleImageDir.resolve(articleId + ".jpg");
+        ArticleRequestDto requestDto = ArticleRequestDto.builder()
+                                                    .userId(userId)
+                                                    .title(title)
+                                                    .content(content)
+                                                    .price(price)
+                                                    .build();
 
-
-        // 파일 저장 (사진 단 하나라고 가정)
-        fileStorageService.storeImage(image, imagePath);
+        articleService.createArticle(requestDto, images);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
