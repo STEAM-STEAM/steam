@@ -9,24 +9,36 @@ const Container = styled.div`
     float: left;
     left : 50%;
     transform: translateX(-50%);
-    height: 50px;
-    border-bottom: 1px solid #ddd;
+    height: 75px;
     float: left;
-    margin-top: 20px;
-    margin-bottom: 100px;
     
     & > a {
         margin-left: 20px;
         float: right;
+        line-height: 75px;
     }
+`;
+
+const HeaderContainer = styled.div`
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #ddd;
+    box-shadow: rgba(206, 206, 206, 0.5) 0px 2px 4px 0px;
+    position: fixed;
+    background: #fff;
+    z-index: 100;
 `;
 
 const Header = () => {
     return (
-        <Container>
-            <Link to="/join">회원가입</Link>
-            <Link to="/login">로그인</Link>
-        </Container>
+        <HeaderContainer>
+            <Container>
+                <Link to="/join">회원가입</Link>
+                <Link to="/login">로그인</Link>
+                <Link to="/">메인페이지</Link>
+                <Link to="/mypage">마이페이지</Link>
+            </Container>
+        </HeaderContainer>
     );
 }
 
