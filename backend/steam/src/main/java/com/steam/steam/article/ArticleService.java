@@ -201,4 +201,17 @@ public class ArticleService {
         List<Article> articles = articleRepository.findByUser(user);
         return articleMapper.toArticleSummaries(articles);
     }
+
+    public List<ArticleSummary> getHistoryOfPurchaseByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<History> historyOfPurchase = historyRepository.findByPurchaser(user);
+        List<Article> articles = articleMapper.toArticleFromHistory(historyOfPurchase);
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getArticlesOfPurchaseByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = purchaseRequestRepository.findByUser(user);
+        return articleMapper.toArticleSummaries(articles);
+    }
 }

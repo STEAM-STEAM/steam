@@ -109,5 +109,16 @@ public class ArticleController {
         return ResponseEntity.ok().body(articles);
     }
 
+    @GetMapping("/article/history/purchase/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getHistoryOfPurchaseByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getHistoryOfPurchaseByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/article/purchase/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesOfPurchaseByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesOfPurchaseByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
 
 }
