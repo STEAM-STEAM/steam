@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 @Entity
@@ -52,7 +53,7 @@ public class Article {
         return this.heartCount--;
     }
 
-    public void setImgUrl(String url) {
-        this.imgUrl = url;
+    public void setImgUrl(Path url) {
+        this.imgUrl = url.toString();
     }
 }

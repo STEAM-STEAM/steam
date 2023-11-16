@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Path;
+
 @Entity
 @Getter
 @RequiredArgsConstructor
@@ -25,5 +27,9 @@ public class User {
         this.nickname = nickname;
         this.region = Region.valueOf(region);
         this.pw = pw;
+    }
+
+    public void setProfileImgUrl(Path path) {
+        this.profileImgUrl = path.toString();
     }
 }

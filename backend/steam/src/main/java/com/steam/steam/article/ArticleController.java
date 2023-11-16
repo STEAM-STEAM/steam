@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -17,6 +18,8 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
     private final FileStorageService fileStorageService;
+
+    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
 
     @Autowired
     public ArticleController(ArticleService articleService,
@@ -35,22 +38,24 @@ public class ArticleController {
             @RequestParam("image") MultipartFile image) {
 
         ArticleRequestDto requestDto = new ArticleRequestDto(userId, title, content, price, image);
-        Long articleId = articleService.createArticle(requestDto);
+        Long articleId = articleService.createArticle(requestDto, articleImageDir);
+        Path imagePath = articleImageDir.resolve(articleId + ".jpg");
+
 
         // 파일 저장 (사진 단 하나라고 가정)
-        fileStorageService.storeFile(image, articleId);
+        fileStorageService.storeImage(image, imagePath);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 
 
-    @GetMapping("/recent")
+    @GetMapping("/articles/recent")
     public ResponseEntity<List<ArticleSummary>> getRecentArticles() {
         List<ArticleSummary> articles = articleService.getRecentArticles();
         return ResponseEntity.ok().body(articles);
     }
 
-    @GetMapping("/recent/{region}")
+    @GetMapping("/articles/recent/{region}")
     public ResponseEntity<List<ArticleSummary>> getRecentArticlesByRegion(@PathVariable String region) {
         List<ArticleSummary> articles = articleService.getRecentArticlesByRegion(region);
         return ResponseEntity.ok().body(articles);
@@ -72,5 +77,23 @@ public class ArticleController {
     public ResponseEntity determineHeartCount(@RequestBody HeartRequestDto heartRequestDto){
         String like = articleService.changeHeartCount(heartRequestDto);
         return new ResponseEntity<>(like, HttpStatus.OK);
+    }
+
+    @PostMapping("/article/purchase")
+    public ResponseEntity determinePurchase(@RequestBody PurchaseRequestDto purchaseRequestDto){
+        String purchase = articleService.changePurchaseStatus(purchaseRequestDto);
+        return new ResponseEntity<>(purchase, HttpStatus.OK);
+    }
+
+    @GetMapping("/article/purchase/request/{articleId}")
+    public ResponseEntity<List<PurchaseRequestResponse>> getPurchaseRequests(@PathVariable Long articleId) {
+        List<PurchaseRequestResponse> purchaseRequests = articleService.getPurchaseRequests(articleId);
+        return ResponseEntity.ok().body(purchaseRequests);
+    }
+
+    @PostMapping("/article/purchase/confirm")
+    public ResponseEntity purchaseConfirm(@RequestBody PurchaseConfirm purchaseConfirm){
+        articleService.purchaseConfirm(purchaseConfirm);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
