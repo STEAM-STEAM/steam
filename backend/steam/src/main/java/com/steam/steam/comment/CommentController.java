@@ -10,11 +10,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@CrossOrigin(origins="http://localhost:3000")
 public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/comment/{articleId}")
-    public ResponseEntity<List<CommentResponseDto>> comments(@PathVariable("articleId") String articleId) {
+    public ResponseEntity<List<CommentResponseDto>> comments(@PathVariable("articleId") Long articleId) {
         List<Comment> comments = commentService.getAllComment(articleId);
 
         List<CommentResponseDto> allCommentResponseDto = new ArrayList<>();
@@ -27,7 +28,7 @@ public class CommentController {
     }
 
     @PostMapping("/comment")
-    public String write(CommentRequestDto commentRequestDto){
+    public String write(@RequestBody CommentRequestDto commentRequestDto){
         commentService.write(commentRequestDto);
 
         return "OK";

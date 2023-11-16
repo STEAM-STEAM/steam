@@ -6,8 +6,12 @@ import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 @Component
 public class ArticleMapper {
@@ -24,8 +28,29 @@ public class ArticleMapper {
     }
 
     public ArticleDetail toArticleDetail(Article article) {
+
+        String imgDir = article.getImgDir();
+        List<String> imgUrls = findJpgFiles(Path.of(imgDir));
+
         return new ArticleDetail(
                 article.getTitle(), article.getContent(), article.getPrice(),
-                article.getUser().getNickname(), article.getUser().getId(), article.getImgUrl());
+                article.getUser().getNickname(), article.getUser().getId(),
+                imgUrls, article.getHeartCount());
+    }
+
+    private List<String> findJpgFiles(Path imgDir) {
+        List<String> imgUrls = new ArrayList<>();
+        try {
+            List<Path> allFiles = Files.walk(imgDir)
+                    .filter(Files::isRegularFile)
+                    .toList();
+
+            for (Path file : allFiles) {
+                if (file.toString().toLowerCase().endsWith(".jpg")) {
+                    imgUrls.add(file.toString());
+                }
+            }
+        } catch (IOException e) { }
+        return imgUrls;
     }
 }

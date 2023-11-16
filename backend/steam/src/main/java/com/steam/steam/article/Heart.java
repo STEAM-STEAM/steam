@@ -1,30 +1,28 @@
-package com.steam.steam.comment;
+package com.steam.steam.article;
 
-import com.steam.steam.article.Article;
 import com.steam.steam.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor
-public class Comment {
+public class Heart {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="comment_id")
+    @Column(name = "heart_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
-
-    private String content;
-    private LocalDateTime createTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
+
+    public Heart(User user, Article article) {
+        this.user = user;
+        this.article = article;
+    }
 }
