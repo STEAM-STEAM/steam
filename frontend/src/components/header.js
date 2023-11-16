@@ -26,7 +26,7 @@ const HeaderContainer = styled.div`
     box-shadow: rgba(206, 206, 206, 0.5) 0px 2px 4px 0px;
     position: fixed;
     background: #fff;
-    z-index: 100;
+    z-index: 1;
 `;
 
 const Header = () => {
