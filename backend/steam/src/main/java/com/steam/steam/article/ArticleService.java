@@ -168,16 +168,51 @@ public class ArticleService {
 
         User purchaser = userRepository.findById(userId).get();
         Article article = articleRepository.findById(articleId).get();
-        User seller = article.getUser();
 
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByArticle(article);
 
         purchaseRequests.forEach(purchaseRequest -> {
             if(purchaseRequest.getUser().equals(purchaser)){
-                History history = new History(seller, article, purchaser);
+                History history = articleMapper.toHistory(article, purchaser);
                 historyRepository.save(history);
             }
             purchaseRequestRepository.delete(purchaseRequest);
         });
+        articleRepository.deleteById(article.getId());
+    }
+
+    public List<ArticleSummary> getArticlesByHeartOfUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Heart> hearts = heartRepository.findByUser(user);
+        List<Article> articles = articleMapper.toArticleFromHearts(hearts);
+
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getHistoryOfSellByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<History> historyOfSell = historyRepository.findBySeller(user);
+        List<Article> articles = articleMapper.toArticleFromHistory(historyOfSell);
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getArticlesOfSellByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = articleRepository.findByUser(user);
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getHistoryOfPurchaseByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<History> historyOfPurchase = historyRepository.findByPurchaser(user);
+        List<Article> articles = articleMapper.toArticleFromHistory(historyOfPurchase);
+        return articleMapper.toArticleSummaries(articles);
+    }
+
+    public List<ArticleSummary> getArticlesOfPurchaseByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUser(user);
+        List<Article> articles = articleMapper.toArticleFromPurchaseRequest(purchaseRequests);
+        return articleMapper.toArticleSummaries(articles);
     }
 }

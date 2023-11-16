@@ -90,4 +90,35 @@ public class ArticleController {
         articleService.purchaseConfirm(purchaseConfirm);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+
+    @GetMapping("/article/heart/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesByHeartOfUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesByHeartOfUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/article/history/sell/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getHistoryOfSellByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getHistoryOfSellByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/article/sell/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesOfSellByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesOfSellByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/article/history/purchase/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getHistoryOfPurchaseByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getHistoryOfPurchaseByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/article/purchase/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesOfPurchaseByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesOfPurchaseByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
 }

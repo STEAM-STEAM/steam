@@ -9,5 +9,6 @@ public record ArticleDetail(
         String sellerNickname,
         String sellerId,
         List<String> imgLinkUrl,
-        Integer heartCount
+        Integer heartCount,
+        String createdTime
 ) {}

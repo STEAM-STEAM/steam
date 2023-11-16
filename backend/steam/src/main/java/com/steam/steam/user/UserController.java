@@ -1,20 +1,19 @@
 package com.steam.steam.user;
 
 import com.steam.steam.FileStorageService;
-import com.steam.steam.user.dto.LoginRequestDto;
-import com.steam.steam.user.dto.MessageResponseDto;
-import com.steam.steam.user.dto.UserImageResponseDto;
-import com.steam.steam.user.dto.UserRequestDto;
+import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
 import com.steam.steam.user.exception.UserIdValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -69,11 +68,35 @@ public class UserController {
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
+//
+//    @GetMapping("/user/profile/image/{userId}")
+//    public ResponseEntity<UserImageResponseDto> getUserProfileImage(@PathVariable String userId) {
+//        String imageUrl = userService.getUserProfileImageUrl(userId);
+//
+//        return ResponseEntity.ok().body(new UserImageResponseDto(imageUrl));
+//    }
 
-    @GetMapping("/user/profile/image/{userId}")
-    public ResponseEntity<UserImageResponseDto> getUserProfileImage(@PathVariable String userId) {
-        String imageUrl = userService.getUserProfileImageUrl(userId);
+    @GetMapping("/user/info/{userId}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable String userId){
+        UserResponseDto userInfo = userService.getUserInfo(userId);
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
+    }
 
-        return ResponseEntity.ok().body(new UserImageResponseDto(imageUrl));
+    @GetMapping("/user/keyword/{userId}")
+    public ResponseEntity<KeywordResponseDto> getKeywordOfUser(@PathVariable String userId){
+        KeywordResponseDto keywords = userService.getKeywordsOfUser(userId);
+        return new ResponseEntity<>(keywords, HttpStatus.OK);
+    }
+
+    @PostMapping("/user/keyword")
+    public ResponseEntity<MessageResponseDto> addKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
+        String message = userService.addKeywordOfUser(keywordRequestDto);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
+    }
+
+    @DeleteMapping("/user/keyword")
+    public ResponseEntity<MessageResponseDto> deleteKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
+        userService.deleteKeywordOfUser(keywordRequestDto);
+        return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 }

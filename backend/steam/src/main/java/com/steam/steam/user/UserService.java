@@ -1,7 +1,6 @@
 package com.steam.steam.user;
 
-import com.steam.steam.user.dto.LoginRequestDto;
-import com.steam.steam.user.dto.UserRequestDto;
+import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.PasswordValidationException;
 import com.steam.steam.user.exception.UserAlreadyExistsException;
 import com.steam.steam.user.exception.UserIdNotExistsException;
@@ -9,18 +8,24 @@ import com.steam.steam.user.exception.UserIdValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
+
+import static com.steam.steam.user.KeywordMapper.toKeywordResponseDto;
 
 @Service
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final KeywordRepository keywordRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, KeywordRepository keywordRepository) {
         this.userRepository = userRepository;
+        this.keywordRepository = keywordRepository;
     }
 
     public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
@@ -50,15 +55,48 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void uploadProfileImage(String userId, Path filePath) {
         User user = userRepository.getReferenceById(userId);
         user.setProfileImgUrl(filePath);
         userRepository.save(user);
     }
 
-    public String getUserProfileImageUrl(String userId) {
+    public UserResponseDto getUserInfo(String userId) {
         User user = userRepository.getReferenceById(userId);
-        return user.getProfileImgUrl();
+        return UserMapper.toResponseDto(user);
+    }
+
+    public KeywordResponseDto getKeywordsOfUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Keyword> keywordsOfUser = keywordRepository.findByUser(user);
+        return toKeywordResponseDto(user, keywordsOfUser);
+    }
+
+    @Transactional
+    public String addKeywordOfUser(KeywordRequestDto keywordRequestDto) {
+        User user = userRepository.getReferenceById(keywordRequestDto.userId());
+        if(checkIfUserHasAKeyword(user, keywordRequestDto.keyword())){
+            return "already exist";
+        }
+        Keyword keyword = new Keyword(user, keywordRequestDto.keyword());
+        keywordRepository.save(keyword);
+        return "success";
+    }
+
+    private boolean checkIfUserHasAKeyword(User user, String keyword) {
+        List<Keyword> keywords = keywordRepository.findByUser(user);
+        for (Keyword candidateKeyword : keywords) {
+            if(candidateKeyword.getKeyword().equals(keyword))
+                return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public void deleteKeywordOfUser(KeywordRequestDto keywordRequestDto) {
+        User user = userRepository.getReferenceById(keywordRequestDto.userId());
+        keywordRepository.deleteByUserAndKeyword(user, keywordRequestDto.keyword());
     }
 }
 
