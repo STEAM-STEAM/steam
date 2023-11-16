@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +28,7 @@ public class Article {
     @ManyToOne
     private User user;
 
-    private String imgUrl;
+    private String imgDir;
 
     @Enumerated(EnumType.STRING)
     private Region region;
@@ -40,7 +41,7 @@ public class Article {
         this.user = user;
         this.region = user.getRegion();
         this.createdTime = LocalDateTime.now();
-        this.imgUrl = "example";
+        this.imgDir = "example";
         this.heartCount = 0;
     }
 
@@ -50,5 +51,9 @@ public class Article {
 
     public Integer decrementHeartCount(){
         return this.heartCount--;
+    }
+
+    public void setImgDir(Path url) {
+        this.imgDir = url.toString();
     }
 }

@@ -4,8 +4,9 @@ import com.steam.steam.article.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
@@ -14,14 +15,30 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+
     @Autowired
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
+    @Transactional
     @PostMapping("/article")
-    public ResponseEntity<Object> createArticle(@RequestBody ArticleRequestDto requestDto) {
-        articleService.createArticle(requestDto);
+    public ResponseEntity<Object> createArticle(
+            @RequestParam("userId") String userId,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("price") Integer price,
+            @RequestParam("image") List<MultipartFile> images) {
+
+        ArticleRequestDto requestDto = ArticleRequestDto.builder()
+                                                    .userId(userId)
+                                                    .title(title)
+                                                    .content(content)
+                                                    .price(price)
+                                                    .build();
+
+        articleService.createArticle(requestDto, images);
+
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 
