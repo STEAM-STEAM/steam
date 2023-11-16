@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
 import Login from "./login";
 
-const WriteFrm = styled.div`
+const WriteFrm = styled.form`
     width: 100%;
 
     & > p {
@@ -87,26 +87,20 @@ const Write = () => {
     // }
     // , [userId, pw, region, nickname]);
 
-    const join = () => {
-        // axios.post('http://localhost:8080/api/join', {
-        //     userId: "",
-        //     title: title,
-        //     content: content,
-        //     price: price,
-        //     imgUrls: images,
-        // },
-        // {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // })
-        // .then((res) => {
-        //     console.log(res);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
-    }
+//     const Write = () => {
+//         axios.post('http://localhost:8080/api/article', {
+//             userId: "",
+//             title: title,
+//             content: content,
+//             price: Number(price),
+//             imgUrls: images,
+//         },
+//         {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         })
+//     }
 
     return (
         <div style={{width: 1200, float: "left", left: "50%", transform: "translateX(-50%)"}}>
@@ -137,7 +131,7 @@ const Write = () => {
                     </div>
                 </Item>
                 <Item>
-                    <Btn onClick={() => join()}>등록하기</Btn>
+                    <Btn onClick={() => Write()}>등록하기</Btn>
                 </Item>
             </WriteFrm>
         </div>
