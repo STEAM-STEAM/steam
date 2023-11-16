@@ -103,4 +103,11 @@ public class ArticleController {
         return ResponseEntity.ok().body(articles);
     }
 
+    @GetMapping("/article/sell/{userId}")
+    public ResponseEntity<List<ArticleSummary>> getArticlesOfSellByUser(@PathVariable String userId) {
+        List<ArticleSummary> articles = articleService.getArticlesOfSellByUser(userId);
+        return ResponseEntity.ok().body(articles);
+    }
+
+
 }

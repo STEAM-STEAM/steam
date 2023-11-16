@@ -195,4 +195,10 @@ public class ArticleService {
         List<Article> articles = articleMapper.toArticleFromHistory(historyOfSell);
         return articleMapper.toArticleSummaries(articles);
     }
+
+    public List<ArticleSummary> getArticlesOfSellByUser(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = articleRepository.findByUser(user);
+        return articleMapper.toArticleSummaries(articles);
+    }
 }
