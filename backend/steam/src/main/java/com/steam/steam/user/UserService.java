@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,17 @@ public class UserService {
         if (!loginDto.pw().equals(existingUser.getPw())) {
             throw new PasswordValidationException("[ERROR] 로그인시 비밀번호 틀림");
         }
+    }
+
+    public void uploadProfileImage(String userId, Path filePath) {
+        User user = userRepository.getReferenceById(userId);
+        user.setProfileImgUrl(filePath);
+        userRepository.save(user);
+    }
+
+    public String getUserProfileImageUrl(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        return user.getProfileImgUrl();
     }
 }
 

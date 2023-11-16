@@ -87,30 +87,24 @@ const Write = () => {
     // }
     // , [userId, pw, region, nickname]);
 
-    const Write = () => {
-        axios.post('http://localhost:8080/api/article', {
-            userId: "",
-            title: title,
-            content: content,
-            price: Number(price),
-            imgUrls: images,
-        },
-        {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        // .then((res) => {
-        //     console.log(res);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
-    }
+//     const Write = () => {
+//         axios.post('http://localhost:8080/api/article', {
+//             userId: "",
+//             title: title,
+//             content: content,
+//             price: Number(price),
+//             imgUrls: images,
+//         },
+//         {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         })
+//     }
 
     return (
         <div style={{width: 1200, float: "left", left: "50%", transform: "translateX(-50%)"}}>
-            <WriteFrm action="/">
+            <WriteFrm>
                 <p>글 작성하기</p>
                 <Item>
                     <p>제목</p>

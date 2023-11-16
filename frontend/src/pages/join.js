@@ -57,14 +57,13 @@ const Join = () => {
     const [pw, setPw] = useState('');
     const [region, setRegion] = useState('서울');
     const [nickname, setNickname] = useState('');
-
-    useEffect(() => {
-        console.log(userId, pw, region, nickname);
-    }
-    , [userId, pw, region, nickname]);
+    // useEffect(() => {
+    //     console.log(userId, pw, region, nickname);
+    // }
+    // , [userId, pw, region, nickname]);
 
     const join = () => {
-        axios.post('http://localhost:8080/user/join', {
+        axios.post('http://localhost:8080/api/join', {
             userId: userId,
             pw: pw,
             region: region,
