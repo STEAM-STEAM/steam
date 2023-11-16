@@ -90,4 +90,6 @@ public class ArticleController {
         articleService.purchaseConfirm(purchaseConfirm);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+
+
 }

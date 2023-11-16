@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -75,11 +76,27 @@ public class UserController {
 //        return ResponseEntity.ok().body(new UserImageResponseDto(imageUrl));
 //    }
 
-    @GetMapping("/user/info/{userId")
+    @GetMapping("/user/info/{userId}")
     public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable String userId){
         UserResponseDto userInfo = userService.getUserInfo(userId);
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
-    @
+    @GetMapping("/user/keyword/{userId}")
+    public ResponseEntity<KeywordResponseDto> getKeywordOfUser(@PathVariable String userId){
+        KeywordResponseDto keywords = userService.getKeywordsOfUser(userId);
+        return new ResponseEntity<>(keywords, HttpStatus.OK);
+    }
+
+    @PostMapping("/user/keyword")
+    public ResponseEntity<MessageResponseDto> addKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
+        userService.addKeywordOfUser(keywordRequestDto);
+        return ResponseEntity.ok().body(new MessageResponseDto("success"));
+    }
+
+    @DeleteMapping("/user/keyword")
+    public ResponseEntity<MessageResponseDto> deleteKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
+        userService.deleteKeywordOfUser(keywordRequestDto);
+        return ResponseEntity.ok().body(new MessageResponseDto("success"));
+    }
 }
