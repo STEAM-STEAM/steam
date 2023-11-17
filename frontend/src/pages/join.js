@@ -63,6 +63,7 @@ const Join = () => {
     // , [userId, pw, region, nickname]);
 
     const join = () => {
+<<<<<<< Updated upstream
         axios.post('http://localhost:8080/api/join', {
             userId: userId,
             pw: pw,
@@ -70,6 +71,29 @@ const Join = () => {
             nickname: nickname
         },
         {
+=======
+        if (userId.length < 8) {
+            alert('아이디는 8자 이상이어야 합니다.');
+            return;
+        } else if (pw.length < 8) {
+            alert('비밀번호는 8자 이상이어야 합니다.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('pw', pw);
+        formData.append('region', region);
+        formData.append('nickname', nickname);
+        formData.append('image', image);
+
+        let entries = formData.entries();
+        for (const pair of entries) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+
+        axios.post('http://localhost:8080/api/join', formData, {
+>>>>>>> Stashed changes
             headers: {
                 'Content-Type': 'application/json',
             },
