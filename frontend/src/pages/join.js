@@ -3,8 +3,8 @@ import styled from "@emotion/styled";
 import Select from 'react-select'
 import axios from 'axios'
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faUser } from "@for/tawesome/free-regular-svg-icons";
 import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 
 const JoinFrm = styled.div`
@@ -99,23 +99,13 @@ const Join = () => {
     };
 
     const join = () => {
-        if (userId.length < 8) {
-            alert('아이디는 8자 이상이어야 합니다.');
-            return;
-        } else if (pw.length < 8) {
-            alert('비밀번호는 8자 이상이어야 합니다.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('userId', userId);
-        formData.append('pw', pw);
-        formData.append('region', region);
-        formData.append('nickname', nickname);
-        formData.append('image', image);
-
         axios.post('http://localhost:8080/api/join', {
-            data: formData,
+            userId: userId,
+            pw: pw,
+            region: region,
+            nickname: nickname
+        },
+        {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

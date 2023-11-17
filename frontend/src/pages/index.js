@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import Search from "../components/search";
 import MainItem from "../components/mainItem";
 import Header from "../components/header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const WriteBtn = styled.button`
     width: 150px;
