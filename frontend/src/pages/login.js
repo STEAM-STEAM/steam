@@ -53,15 +53,15 @@ const Btn = styled.button`
 
 const Login = () => {
 
-    const [id, setId] = useState("");
+    const [userId, setId] = useState("");
     const [pw, setPw] = useState("");
 
     const login = () => {
         const data = {
-            id: id,
+            userId: userId,
             pw: pw
         };
-        axios.post('http://localhost:8080/user/login', data).then(loginSuccess).catch(err => {
+        axios.post('http://localhost:8080/api/login', data).then(loginSuccess).catch(err => {
             alert("아이디 또는 비밀번호를 다시 확인해주세요.");
         });
     }
@@ -81,7 +81,7 @@ const Login = () => {
 
     // 로그인 성공시 유저 정보 요청
     const userInfo = () => {
-        axios.get(`http://localhost:8080/user/info/${id}`).then(res => {
+        axios.get(`http://localhost:8080/api/user/info/${userId}`).then(res => {
             const user = JSON.parse(res.data);
             sessionStorage.setItem("user", user);
         });
@@ -113,7 +113,7 @@ const Login = () => {
                     </div>
                 </Item>
                 <Item>
-                    <Btn onClick={() => login}>로그인</Btn>
+                    <Btn onClick={() => login()}>로그인</Btn>
                 </Item>
             </LoginFrm>
         </div>
