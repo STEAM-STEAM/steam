@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -28,9 +29,11 @@ public class UserService {
         this.keywordRepository = keywordRepository;
     }
 
-    public void join(UserRequestDto userDto) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
+    public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
-
+        if(!image.isEmpty()){
+            user.setProfileImgUrl(filePath);
+        }
         if (user.getId().length() < 8) {
             throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
         }
