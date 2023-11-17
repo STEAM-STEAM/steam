@@ -2,9 +2,9 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+// import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
     width: 100%;
@@ -63,7 +63,9 @@ const Search = () => {
             </LocationSelector>
             <PriceInput type="number" placeholder="최소 가격" />&nbsp;~&nbsp; 
             <PriceInput type="number" placeholder="최대 가격" />
-            <SearchBtn><FontAwesomeIcon icon={faMagnifyingGlass} /> 검색</SearchBtn>
+            <SearchBtn>
+                검색
+            </SearchBtn>
             <SearchInput type="text" placeholder="검색어를 입력하세요." />
         </Container>
     )

@@ -2,8 +2,8 @@ import React, {useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import axios from 'axios'
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlus, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
 import Login from "./login";
 
 const WriteFrm = styled.form`
