@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins="http://localhost:3001")
 public class UserController {
     private final UserService userService;
     private final FileStorageService fileStorageService;
@@ -32,9 +32,16 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<MessageResponseDto> joinUser(@RequestBody UserRequestDto userDto) {
+    public ResponseEntity<MessageResponseDto> joinUser(
+            @RequestParam("userId") String userId,
+            @RequestParam("pw") String pw,
+            @RequestParam("region") String region,
+            @RequestParam("nickname") String nickname,
+            @RequestParam("image") MultipartFile image) {
         try {
-            userService.join(userDto);
+            Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
+            UserRequestDto userDto = new UserRequestDto(userId, pw, nickname, Region.valueOf(region));
+            userService.join(userDto, image, filePath);
             return ResponseEntity.ok().body(new MessageResponseDto("success"));
         } catch (UserAlreadyExistsException | UserIdValidationException e) {
             return ResponseEntity.ok().body(new MessageResponseDto("id_error"));
