@@ -3,9 +3,6 @@ import styled from "@emotion/styled";
 import Select from 'react-select'
 import axios from 'axios'
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@for/tawesome/free-regular-svg-icons";
-import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 
 const JoinFrm = styled.div`
     width: 100%;
@@ -71,43 +68,43 @@ const Join = () => {
     const [pw, setPw] = useState('');
     const [region, setRegion] = useState('서울');
     const [nickname, setNickname] = useState('');
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState();
 
     const [imageName, setImageName] = useState('');
 
-    // useEffect(() => {
-    //     console.log(userId, pw, region, nickname);
-    // }
-    // , [userId, pw, region, nickname]);
-
     const onChangeImage = (e) => {
         setImage(e.target.files[0]);
+        if (e.target.files[0] == null) {
+            setImageName('');
+            return;
+        }
         setImageName(e.target.files[0].name);
-        // const imageLists = e.target.files;
-        // let imageUrlLists = [...images];
-    
-        // for (let i = 0; i < imageLists.length; i++) {
-        //     const currentImageUrl = URL.createObjectURL(imageLists[i]);
-        //     imageUrlLists.push(currentImageUrl);
-        // }
-    
-        // if (imageUrlLists.length > 10) {
-        //     imageUrlLists = imageUrlLists.slice(0, 10);
-        // }
-    
-        // setImages(imageUrlLists);
     };
 
     const join = () => {
-        axios.post('http://localhost:8080/api/join', {
-            userId: userId,
-            pw: pw,
-            region: region,
-            nickname: nickname
-        },
-        {
+        if (userId.length < 8) {
+            alert('아이디는 8자 이상이어야 합니다.');
+            return;
+        } else if (pw.length < 8) {
+            alert('비밀번호는 8자 이상이어야 합니다.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('pw', pw);
+        formData.append('region', region);
+        formData.append('nickname', nickname);
+        formData.append('image', image);
+
+        let entries = formData.entries();
+        for (const pair of entries) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+
+        axios.post('https://9be48aa0-adc8-4a18-be5c-fbdd40bdf675.mock.pstmn.io/api/join', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                "Content-Type": "multipart/form-data"
             }
         })
         .then((res) => {
