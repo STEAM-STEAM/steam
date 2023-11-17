@@ -2,8 +2,8 @@ import React from "react";
 import styled from "@emotion/styled";
 import Select from 'react-select'
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const JoinFrm = styled.div`
     width: 100%;
