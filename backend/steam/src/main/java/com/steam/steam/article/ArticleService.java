@@ -1,6 +1,7 @@
 package com.steam.steam.article;
 
 import com.steam.steam.FileStorageService;
+import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
@@ -57,13 +58,13 @@ public class ArticleService {
     }
 
     public List<ArticleSummary> getRecentArticles() {
-        List<Article> articles = articleRepository.findAllByOrderByCreatedTimeDesc();
+        List<Article> articles = articleRepository.findByHideFalseOrderByCreatedTimeDesc();
         return toArticleSummaries(articles);
     }
 
 
     public List<ArticleSummary> getRecentArticlesByRegion(String region) {
-        List<Article> articles = articleRepository.findByRegionOrderByCreatedTimeDesc(Region.valueOf(region));
+        List<Article> articles = articleRepository.findVisibleByRegionOrderByCreatedTimeDesc(Region.valueOf(region));
         return toArticleSummaries(articles);
     }
 
@@ -214,5 +215,11 @@ public class ArticleService {
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUser(user);
         List<Article> articles = articleMapper.toArticleFromPurchaseRequest(purchaseRequests);
         return articleMapper.toArticleSummaries(articles);
+    }
+
+    public void setHideArticles(List<UserIdDto> users, boolean hideSetting) {
+        List<Article> articles = articleRepository.findByHide(hideSetting);
+        articles.forEach(article -> article.setHide(hideSetting));
+        articleRepository.saveAll(articles);
     }
 }

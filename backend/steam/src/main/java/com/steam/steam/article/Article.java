@@ -35,6 +35,8 @@ public class Article {
     private Region region;
     private Integer heartCount;
 
+    private boolean hide;
+
     public Article(String title, String content, Integer price, User user) {
         this.title = title;
         this.content = content;
@@ -56,5 +58,9 @@ public class Article {
 
     public void setImgDir(Path url) {
         this.imgDir = url.toString();
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 }
