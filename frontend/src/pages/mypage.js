@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "@emotion/styled";
 import MainItem from "../components/mainItem";
 import Modal from 'react-modal';
+import axios from 'axios';
 
 const Profile = styled.div`
     width: 20%;
@@ -74,7 +75,9 @@ const customModalStyles = {
 
 const ProfileInfo = () => {
     const publicUrl = process.env.PUBLIC_URL;
-    const profile_img = "image1.png";
+
+    const user = JSON.parse(sessionStorage.getItem("user")) ?? "";
+    console.log(user);
 
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -106,11 +109,11 @@ const ProfileInfo = () => {
             <PopupMessage />
             <div>
                 <div>
-                    <p><b style={{fontSize: 18}}>유저 닉네임</b></p>
-                    <p>활동지역 <b>대전</b></p>
+                    <p><b style={{fontSize: 18}}>{user.nickname}</b></p>
+                    <p>활동지역 <b>{user.region}</b></p>
                 </div>
                 <div>
-                    <img src={`${publicUrl}/assets/images/${profile_img}`} alt="img" />
+                    <img src={`${publicUrl}/assets/images/${user.profileImgUrl}`} alt="img" />
                 </div>
             </div>
             <div>
