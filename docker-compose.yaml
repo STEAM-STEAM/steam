@@ -1,6 +1,8 @@
 version: "3.8"
 
 networks:
+  steam-net:
+    driver: bridge
   database:
     driver: bridge
 
@@ -16,6 +18,7 @@ services:
       - 8080:8080
     networks:
       - database
+      - steam-net
     depends_on:
       - steam-db 
     environment:
@@ -30,7 +33,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - database
+      - steam-net
     environment:
       - TZ=Asia/Seoul
 
@@ -47,7 +50,7 @@ services:
       - --range_optimizer_max_mem_size=16777216
     environment:
       MYSQL_DATABASE : steam
-      MYSQL_USER: root
+      MYSQL_USER: steam
       MYSQL_PASSWORD: steam
       MYSQL_ROOT_PASSWORD: steam
     networks:
@@ -60,6 +63,8 @@ services:
     ports: 
       - "80:80/tcp"
       - "443:443"
+    networks:
+      - steam-net
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
     environment:
