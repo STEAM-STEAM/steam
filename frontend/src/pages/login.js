@@ -53,12 +53,12 @@ const Btn = styled.button`
 
 const Login = () => {
 
-    const [id, setId] = useState("");
+    const [userId, setId] = useState("");
     const [pw, setPw] = useState("");
 
     const login = () => {
         const data = {
-            userId: id,
+            userId: userId,
             pw: pw
         };
         axios.post('http://localhost:8080/api/login', data).then(loginSuccess).catch(err => {
@@ -79,7 +79,7 @@ const Login = () => {
 
     // 로그인 성공시 유저 정보 요청
     const userInfo = () => {
-        axios.get(`http://localhost:8080/api/user/info/${id}`).then(res => {
+        axios.get(`http://localhost:8080/api/user/info/${userId}`).then(res => {
             const user = JSON.stringify(res.data);
             sessionStorage.setItem("user", user);
 

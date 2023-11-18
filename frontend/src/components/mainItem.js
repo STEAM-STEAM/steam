@@ -36,17 +36,17 @@ const Item = styled.div`
     }
 `;
 
-const MainItem = ({ src, title, price, name }) => {
+const MainItem = ({ articleId, title, price, userNickname, imgLinkUrl }) => {
     const publicUrl = process.env.PUBLIC_URL;
 
     return (
         <Item>
             <Link to="/detail">
-                <img src={`${publicUrl}/assets/images/${src}`} alt="img" />
+                <img src={`${publicUrl}/assets/images/${imgLinkUrl}`} alt="img" />
                 <div>
                     <p>
                         {/* <FontAwesomeIcon icon={faUser} />  */}
-                        {name}
+                        {userNickname}
                     </p>
                     <p>{title}</p>
                     <p>{parseInt(price).toLocaleString()}원</p>

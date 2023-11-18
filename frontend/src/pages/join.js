@@ -102,7 +102,7 @@ const Join = () => {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        axios.post('https://9be48aa0-adc8-4a18-be5c-fbdd40bdf675.mock.pstmn.io/api/join', formData, {
+        axios.post('http://localhost:8080/api/join', formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }

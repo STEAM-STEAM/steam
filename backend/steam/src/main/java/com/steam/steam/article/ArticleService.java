@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class ArticleService {
     private final PurchaseRequestRepository purchaseRequestRepository;
     private final HistoryRepository historyRepository;
 
-    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
+    private static final Path articleImageDir = Path.of("images/article/");
     private final FileStorageService fileStorageService;
 
     @Autowired
@@ -39,12 +41,13 @@ public class ArticleService {
         this.fileStorageService = fileStorageService;
     }
 
-    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) {
+    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) throws IOException {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
         Long id = article.getId();
 
         Path imageDir = articleImageDir.resolve(String.valueOf(id));
+        Files.createDirectories(imageDir.getParent());
         List<Path> filePaths = new ArrayList<>();
         for(int i=0; i<images.size(); i++) {
             filePaths.add(imageDir.resolve(i + ".jpg"));
@@ -214,5 +217,12 @@ public class ArticleService {
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUser(user);
         List<Article> articles = articleMapper.toArticleFromPurchaseRequest(purchaseRequests);
         return articleMapper.toArticleSummaries(articles);
+    }
+
+    @Transactional
+    public void deleteArticles(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = articleRepository.findByUser(user);
+        articleRepository.deleteAll(articles);
     }
 }
