@@ -1,10 +1,7 @@
 package com.steam.steam.user;
 
 import com.steam.steam.user.dto.*;
-import com.steam.steam.user.exception.PasswordValidationException;
-import com.steam.steam.user.exception.UserAlreadyExistsException;
-import com.steam.steam.user.exception.UserIdNotExistsException;
-import com.steam.steam.user.exception.UserIdValidationException;
+import com.steam.steam.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,13 +43,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException {
+    public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException, BlacklistedUserException {
         Optional<User> optionalUser = userRepository.findById(loginDto.userId());
-
         if (optionalUser.isEmpty()) {
             throw new UserIdNotExistsException("[ERROR] 로그인시 존재하지 않는 아이디");
         }
         User existingUser = optionalUser.get();
+        if (existingUser.isBlacklisted()) {
+            throw new BlacklistedUserException("[Error] 블랙리스트 유저: 로그인 불가");
+        }
         if (!loginDto.pw().equals(existingUser.getPw())) {
             throw new PasswordValidationException("[ERROR] 로그인시 비밀번호 틀림");
         }

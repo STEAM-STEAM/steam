@@ -2,18 +2,13 @@ package com.steam.steam.user;
 
 import com.steam.steam.FileStorageService;
 import com.steam.steam.user.dto.*;
-import com.steam.steam.user.exception.PasswordValidationException;
-import com.steam.steam.user.exception.UserAlreadyExistsException;
-import com.steam.steam.user.exception.UserIdNotExistsException;
-import com.steam.steam.user.exception.UserIdValidationException;
+import com.steam.steam.user.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -61,6 +56,8 @@ public class UserController {
             return ResponseEntity.ok().body(new MessageResponseDto("id_error"));
         } catch (PasswordValidationException e) {
             return ResponseEntity.ok().body(new MessageResponseDto("pw_error"));
+        } catch (BlacklistedUserException e) {
+            return ResponseEntity.ok().body(new MessageResponseDto("blacklist"));
         }
     }
 
