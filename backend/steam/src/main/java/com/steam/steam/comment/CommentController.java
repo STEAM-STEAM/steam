@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
     private final CommentService commentService;
 
