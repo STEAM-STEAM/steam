@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +41,13 @@ public class ArticleService {
         this.fileStorageService = fileStorageService;
     }
 
-    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) {
+    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) throws IOException {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
         Long id = article.getId();
 
         Path imageDir = articleImageDir.resolve(String.valueOf(id));
+        Files.createDirectories(imageDir.getParent());
         List<Path> filePaths = new ArrayList<>();
         for(int i=0; i<images.size(); i++) {
             filePaths.add(imageDir.resolve(i + ".jpg"));
