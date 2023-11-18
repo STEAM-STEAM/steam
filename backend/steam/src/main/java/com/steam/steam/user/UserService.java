@@ -1,5 +1,6 @@
 package com.steam.steam.user;
 
+import com.steam.steam.FileStorageService;
 import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +20,23 @@ import static com.steam.steam.user.KeywordMapper.toKeywordResponseDto;
 public class UserService {
     private final UserRepository userRepository;
     private final KeywordRepository keywordRepository;
+    private final FileStorageService fileStorageService;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, KeywordRepository keywordRepository) {
+    public UserService(UserRepository userRepository, KeywordRepository keywordRepository, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.keywordRepository = keywordRepository;
+        this.fileStorageService = fileStorageService;
     }
 
+    @Transactional
     public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
+        userRepository.save(user);
+
         if(!image.isEmpty()){
-            user.setProfileImgUrl(filePath);
+            uploadProfileImage(user.getId(), filePath, image);
         }
         if (user.getId().length() < 8) {
             throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
@@ -40,7 +47,6 @@ public class UserService {
         if (userRepository.findById(user.getId()).isPresent()) {
             throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
         }
-        userRepository.save(user);
     }
 
     public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException, BlacklistedUserException {
@@ -58,7 +64,8 @@ public class UserService {
     }
 
     @Transactional
-    public void uploadProfileImage(String userId, Path filePath) {
+    public void uploadProfileImage(String userId, Path filePath, MultipartFile image) {
+        fileStorageService.storeImage(image, filePath);
         User user = userRepository.getReferenceById(userId);
         user.setProfileImgUrl(filePath);
         userRepository.save(user);

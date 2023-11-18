@@ -1,6 +1,5 @@
 package com.steam.steam.user;
 
-import com.steam.steam.FileStorageService;
 import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,18 +17,15 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:3001")
 public class UserController {
     private final UserService userService;
-    private final FileStorageService fileStorageService;
 
-    private static final Path userImageDir = Path.of("./src/main/java/com/steam/steam/user/pic/");
+    private static final Path userImageDir = Path.of("./images/user/");
 
 
     @Autowired
-    public UserController(UserService userService, FileStorageService fileStorageService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.fileStorageService = fileStorageService;
     }
 
     @ApiResponse(responseCode = "")
@@ -80,8 +76,7 @@ public class UserController {
             @RequestParam("image") MultipartFile image) {
 
         Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
-        userService.uploadProfileImage(userId, filePath);
-        fileStorageService.storeImage(image, filePath);
+        userService.uploadProfileImage(userId, filePath, image);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }

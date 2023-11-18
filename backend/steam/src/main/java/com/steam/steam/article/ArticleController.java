@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ArticleController {
     private final ArticleService articleService;
-
 
     @Autowired
     public ArticleController(ArticleService articleService) {
@@ -28,7 +28,7 @@ public class ArticleController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("price") Integer price,
-            @RequestParam("image") List<MultipartFile> images) {
+            @RequestParam("image") List<MultipartFile> images) throws IOException {
 
         ArticleRequestDto requestDto = ArticleRequestDto.builder()
                                                     .userId(userId)
