@@ -3,6 +3,7 @@ package com.steam.steam.article;
 import com.steam.steam.FileStorageService;
 import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
+import com.steam.steam.article.exception.ArticleHiddenException;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +82,11 @@ public class ArticleService {
         return articleSummary;
     }
 
-    public ArticleDetail getArticleDetail(Long articleId) {
+    public ArticleDetail getArticleDetail(Long articleId) throws ArticleHiddenException {
         Article article = articleRepository.getReferenceById(articleId);
+        if (article.isHide()) {
+            throw new ArticleHiddenException("[ERROR] 블랙리스트 사용자 글: 숨겨짐");
+        }
         return articleMapper.toArticleDetail(article);
     }
 
@@ -217,9 +220,13 @@ public class ArticleService {
         return articleMapper.toArticleSummaries(articles);
     }
 
+    @Transactional
     public void setHideArticles(List<UserIdDto> users, boolean hideSetting) {
-        List<Article> articles = articleRepository.findByHide(hideSetting);
-        articles.forEach(article -> article.setHide(hideSetting));
-        articleRepository.saveAll(articles);
+        for (UserIdDto userDto : users) {
+            User user = userRepository.getReferenceById(userDto.userId());
+            List<Article> articles = articleRepository.findByUser(user);
+            articles.forEach(article -> article.setHide(hideSetting));
+            articleRepository.saveAll(articles);
+        }
     }
 }
