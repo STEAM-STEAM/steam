@@ -3,6 +3,12 @@ package com.steam.steam.user;
 import com.steam.steam.FileStorageService;
 import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +32,20 @@ public class UserController {
         this.fileStorageService = fileStorageService;
     }
 
+    @ApiResponse(responseCode = "")
+    @Operation(summary = "회원가입", description = "유저 회원가입")
     @PostMapping("/join")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200 OK", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = MessageResponseDto.class))),
+            @ApiResponse(responseCode = "200 id_error", description = "중복된 id 존재", content = @Content(schema = @Schema(implementation = MessageResponseDto.class))),
+            @ApiResponse(responseCode = "200 pw_error", description = "비밀번호 8자리 이하", content = @Content(schema = @Schema(implementation = MessageResponseDto.class)))
+    })
     public ResponseEntity<MessageResponseDto> joinUser(
-            @RequestParam("userId") String userId,
-            @RequestParam("pw") String pw,
-            @RequestParam("region") String region,
-            @RequestParam("nickname") String nickname,
-            @RequestParam("image") MultipartFile image) {
+            @Parameter(description = "유저 아이디", required = true, example = "abcd1234") @RequestParam("userId") String userId,
+            @Parameter(description = "유저 비밀번호", required = true, example = "abcd1234")@RequestParam("pw") String pw,
+            @Parameter(description = "유저 거주 지역", required = true, example = "대전") @RequestParam("region") String region,
+            @Parameter(description = "유저 닉네임", required = true, example = "steam")@RequestParam("nickname") String nickname,
+            @Parameter(description = "유저 프로필 사진", required = true)@RequestParam("image") MultipartFile image) {
         try {
             Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
             UserRequestDto userDto = new UserRequestDto(userId, pw, nickname, Region.valueOf(region));
