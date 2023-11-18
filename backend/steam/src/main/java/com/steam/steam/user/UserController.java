@@ -11,7 +11,7 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="http://localhost:3001")
+@CrossOrigin(origins="http://localhost:3000")
 public class UserController {
     private final UserService userService;
 
