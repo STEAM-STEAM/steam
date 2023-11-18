@@ -28,12 +28,10 @@ public class AdminService {
 
 
     @Transactional
-    public void setBlacklist(List<UserIdDto> users, boolean isBlacked) {
-        for (UserIdDto userDto : users) {
-            User user = userRepository.getReferenceById(userDto.userId());
-            user.setBlacklisted(isBlacked);
-            userRepository.save(user);
-        }
+    public void setBlacklist(String userId, boolean isBlacked) {
+        User user = userRepository.getReferenceById(userId);
+        user.setBlacklisted(isBlacked);
+        userRepository.save(user);
     }
 
     public List<UserIdNicknameDto> getBlackList() {

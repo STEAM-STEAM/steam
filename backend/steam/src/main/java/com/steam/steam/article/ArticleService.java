@@ -217,11 +217,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticles(List<UserIdDto> users) {
-        for (UserIdDto userDto : users) {
-            User user = userRepository.getReferenceById(userDto.userId());
-            List<Article> articles = articleRepository.findByUser(user);
-            articleRepository.deleteAll(articles);
-        }
+    public void deleteArticles(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = articleRepository.findByUser(user);
+        articleRepository.deleteAll(articles);
     }
 }

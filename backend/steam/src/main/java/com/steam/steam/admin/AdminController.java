@@ -30,18 +30,18 @@ public class AdminController {
         return ResponseEntity.ok().body(adminService.getBlackList());
     }
 
-    @PostMapping("/blacklist/add")
+    @DeleteMapping("/blacklist/add/{userId}")
     @Transactional
-    public ResponseEntity<MessageResponseDto> addToBlacklist(@RequestBody List<UserIdDto> users) {
-        adminService.setBlacklist(users, true);
-        articleService.deleteArticles(users);
+    public ResponseEntity<MessageResponseDto> addToBlacklist(@PathVariable String userId) {
+        adminService.setBlacklist(userId, true);
+        articleService.deleteArticles(userId);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 
-    @PostMapping("/blacklist/remove")
+    @GetMapping("/blacklist/remove/{userId}")
     @Transactional
-    public ResponseEntity<MessageResponseDto> removeBlacklist(@RequestBody List<UserIdDto> users) {
-        adminService.setBlacklist(users, false);
+    public ResponseEntity<MessageResponseDto> removeBlacklist(@PathVariable String userId) {
+        adminService.setBlacklist(userId, false);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 }
