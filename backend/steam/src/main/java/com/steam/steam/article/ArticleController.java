@@ -1,7 +1,6 @@
 package com.steam.steam.article;
 
 import com.steam.steam.article.dto.*;
-import com.steam.steam.article.exception.ArticleHiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,14 +57,8 @@ public class ArticleController {
 
     @GetMapping("/article/{article_id}")
     public ResponseEntity<ArticleDetail> getArticleById(@PathVariable Long article_id) {
-        try {
-            ArticleDetail article = articleService.getArticleDetail(article_id);
-            return ResponseEntity.ok().body(article);
-        } catch (ArticleHiddenException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new ArticleDetail("-","-",0,"-","-",null,0,"0"));
-        }
+        ArticleDetail article = articleService.getArticleDetail(article_id);
+        return ResponseEntity.ok().body(article);
     }
 
     @GetMapping("/article/search")

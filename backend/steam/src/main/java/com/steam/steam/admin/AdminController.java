@@ -34,7 +34,7 @@ public class AdminController {
     @Transactional
     public ResponseEntity<MessageResponseDto> addToBlacklist(@RequestBody List<UserIdDto> users) {
         adminService.setBlacklist(users, true);
-        articleService.setHideArticles(users, true);
+        articleService.deleteArticles(users);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 
@@ -42,7 +42,6 @@ public class AdminController {
     @Transactional
     public ResponseEntity<MessageResponseDto> removeBlacklist(@RequestBody List<UserIdDto> users) {
         adminService.setBlacklist(users, false);
-        articleService.setHideArticles(users, false);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 }

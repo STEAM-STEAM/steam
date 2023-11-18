@@ -3,7 +3,6 @@ package com.steam.steam.article;
 import com.steam.steam.FileStorageService;
 import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
-import com.steam.steam.article.exception.ArticleHiddenException;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
@@ -58,13 +57,13 @@ public class ArticleService {
     }
 
     public List<ArticleSummary> getRecentArticles() {
-        List<Article> articles = articleRepository.findByHideFalseOrderByCreatedTimeDesc();
+        List<Article> articles = articleRepository.findAllByOrderByCreatedTimeDesc();
         return toArticleSummaries(articles);
     }
 
 
     public List<ArticleSummary> getRecentArticlesByRegion(String region) {
-        List<Article> articles = articleRepository.findVisibleByRegionOrderByCreatedTimeDesc(Region.valueOf(region));
+        List<Article> articles = articleRepository.findByRegionOrderByCreatedTimeDesc(Region.valueOf(region));
         return toArticleSummaries(articles);
     }
 
@@ -82,11 +81,8 @@ public class ArticleService {
         return articleSummary;
     }
 
-    public ArticleDetail getArticleDetail(Long articleId) throws ArticleHiddenException {
+    public ArticleDetail getArticleDetail(Long articleId) {
         Article article = articleRepository.getReferenceById(articleId);
-        if (article.isHide()) {
-            throw new ArticleHiddenException("[ERROR] 블랙리스트 사용자 글: 숨겨짐");
-        }
         return articleMapper.toArticleDetail(article);
     }
 
@@ -221,12 +217,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public void setHideArticles(List<UserIdDto> users, boolean hideSetting) {
+    public void deleteArticles(List<UserIdDto> users) {
         for (UserIdDto userDto : users) {
             User user = userRepository.getReferenceById(userDto.userId());
             List<Article> articles = articleRepository.findByUser(user);
-            articles.forEach(article -> article.setHide(hideSetting));
-            articleRepository.saveAll(articles);
+            articleRepository.deleteAll(articles);
         }
     }
 }
