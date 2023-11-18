@@ -7,8 +7,10 @@ networks:
 services:
   steam-backend:
     container_name: steam-backend
+    image: yenyeny1/steam-backend:1.0
     # build: ./backend/steam/
-    build: yenyeny1/steam-backend:1.0
+    volumes:
+      - ./images:/app/images
     restart: always
     ports:
       - 8080:8080
@@ -18,7 +20,20 @@ services:
       - steam-db 
     environment:
       - TZ=Asia/Seoul
-  
+
+  frontend:
+    container_name: steam-front
+    image: shingyeongjun/steam-front:latest
+    volumes:
+      - ./images:/app/public/assets/images
+    restart: on-failure
+    ports:
+      - 3000:3000
+    networks:
+      - database
+    environment:
+      - TZ=Asia/Seoul
+
   steam-db:
     container_name: steam-db
     image: mysql:latest
