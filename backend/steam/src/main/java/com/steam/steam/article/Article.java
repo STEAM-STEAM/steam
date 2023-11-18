@@ -57,4 +57,5 @@ public class Article {
     public void setImgDir(Path url) {
         this.imgDir = url.toString();
     }
+
 }

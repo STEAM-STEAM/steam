@@ -1,6 +1,7 @@
 package com.steam.steam.article;
 
 import com.steam.steam.FileStorageService;
+import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,5 +214,12 @@ public class ArticleService {
         List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUser(user);
         List<Article> articles = articleMapper.toArticleFromPurchaseRequest(purchaseRequests);
         return articleMapper.toArticleSummaries(articles);
+    }
+
+    @Transactional
+    public void deleteArticles(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        List<Article> articles = articleRepository.findByUser(user);
+        articleRepository.deleteAll(articles);
     }
 }
