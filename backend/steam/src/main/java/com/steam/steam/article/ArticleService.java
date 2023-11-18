@@ -1,7 +1,6 @@
 package com.steam.steam.article;
 
 import com.steam.steam.FileStorageService;
-import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
@@ -23,7 +22,7 @@ public class ArticleService {
     private final PurchaseRequestRepository purchaseRequestRepository;
     private final HistoryRepository historyRepository;
 
-    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
+    private static final Path articleImageDir = Path.of("images/article/");
     private final FileStorageService fileStorageService;
 
     @Autowired
