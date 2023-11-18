@@ -1,0 +1,39 @@
+version: "3.8"
+
+networks:
+  database:
+    driver: bridge
+
+services:
+  steam-backend:
+    container_name: steam-backend
+    # build: ./backend/steam/
+    build: yenyeny1/steam-backend:1.0
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - database
+    depends_on:
+      - steam-db 
+    environment:
+      - TZ=Asia/Seoul
+  
+  steam-db:
+    container_name: steam-db
+    image: mysql:latest
+    restart: always
+    ports: 
+      - 3306:3306
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --range_optimizer_max_mem_size=16777216
+    environment:
+      MYSQL_DATABASE : steam
+      MYSQL_USER: root
+      MYSQL_PASSWORD: steam
+      MYSQL_ROOT_PASSWORD: steam
+    networks:
+    - database
