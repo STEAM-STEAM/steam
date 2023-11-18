@@ -30,8 +30,11 @@ public class UserService {
         this.fileStorageService = fileStorageService;
     }
 
+    @Transactional
     public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
+        userRepository.save(user);
+
         if(!image.isEmpty()){
             uploadProfileImage(user.getId(), filePath, image);
         }
@@ -44,7 +47,6 @@ public class UserService {
         if (userRepository.findById(user.getId()).isPresent()) {
             throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
         }
-        userRepository.save(user);
     }
 
     public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException, BlacklistedUserException {
