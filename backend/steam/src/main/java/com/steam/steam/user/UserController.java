@@ -1,5 +1,6 @@
 package com.steam.steam.user;
 
+import com.steam.steam.config.AccessPath;
 import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,7 +78,8 @@ public class UserController {
             @RequestParam("image") MultipartFile image) {
 
         Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
-        userService.uploadProfileImage(userId, filePath, image);
+        Path accessPath = Path.of(AccessPath.USER_PROFILE.get() + userId + "/profile.jpg");
+        userService.uploadProfileImage(userId, filePath, accessPath, image);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }

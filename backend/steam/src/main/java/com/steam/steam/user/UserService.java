@@ -1,6 +1,7 @@
 package com.steam.steam.user;
 
 import com.steam.steam.FileStorageService;
+import com.steam.steam.config.AccessPath;
 import com.steam.steam.user.dto.*;
 import com.steam.steam.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,8 @@ public class UserService {
 
         userRepository.save(user);
         if(!image.isEmpty()){
-            uploadProfileImage(user.getId(), filePath, image);
+            Path accessPath = Path.of(AccessPath.USER_PROFILE.get() + user.getId() + "/profile.jpg");
+            uploadProfileImage(user.getId(), filePath, accessPath, image);
         }
         if (user.getId().length() < 8) {
             throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
@@ -65,10 +67,10 @@ public class UserService {
     }
 
     @Transactional
-    public void uploadProfileImage(String userId, Path filePath, MultipartFile image) {
+    public void uploadProfileImage(String userId, Path filePath, Path accessPath, MultipartFile image) {
         fileStorageService.storeImage(image, filePath);
         User user = userRepository.getReferenceById(userId);
-        user.setProfileImgUrl(filePath);
+        user.setProfileImgUrl(accessPath);
         userRepository.save(user);
     }
 
