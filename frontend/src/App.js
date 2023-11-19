@@ -19,7 +19,7 @@ function App() {
         <Route exact path="/join" element={<Join />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/mypage" element={<MyPage />} />
-        <Route exact path="/detail" element={<Detail />} />
+        <Route exact path="/detail/:articleId" element={<Detail />} />
       </Routes>
     </>
   );
