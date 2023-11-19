@@ -10,10 +10,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.nio.file.Path;
 
 @RestController
@@ -21,9 +24,6 @@ import java.nio.file.Path;
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
-
-    private static final Path userImageDir = Path.of("./images/user/");
-
 
     @Autowired
     public UserController(UserService userService) {
@@ -45,9 +45,8 @@ public class UserController {
             @Parameter(description = "유저 닉네임", required = true, example = "steam")@RequestParam("nickname") String nickname,
             @Parameter(description = "유저 프로필 사진", required = true)@RequestParam("image") MultipartFile image) {
         try {
-            Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
             UserRequestDto userDto = new UserRequestDto(userId, pw, nickname, Region.valueOf(region));
-            userService.join(userDto, image, filePath);
+            userService.join(userDto, image);
             return ResponseEntity.ok().body(new MessageResponseDto("success"));
         } catch (UserAlreadyExistsException | UserIdValidationException e) {
             return ResponseEntity.ok().body(new MessageResponseDto("id_error"));
@@ -77,19 +76,16 @@ public class UserController {
             @RequestParam("userId") String userId,
             @RequestParam("image") MultipartFile image) {
 
-        Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
-        Path accessPath = Path.of(AccessPath.USER_PROFILE.get() + userId + "/profile.jpg");
-        userService.uploadProfileImage(userId, filePath, accessPath, image);
-
+        userService.uploadProfileImage(userId, image);
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
-//
-//    @GetMapping("/user/profile/image/{userId}")
-//    public ResponseEntity<UserImageResponseDto> getUserProfileImage(@PathVariable String userId) {
-//        String imageUrl = userService.getUserProfileImageUrl(userId);
-//
-//        return ResponseEntity.ok().body(new UserImageResponseDto(imageUrl));
-//    }
+
+    @GetMapping("/user/profile/{userId}")
+    public ResponseEntity<FileSystemResource> getUserImage(@PathVariable String userId) {
+        Path profileUrl = userService.getProfileUrl(userId);
+        FileSystemResource fileSystemResource = new FileSystemResource(profileUrl);
+        return ResponseEntity.ok().body(fileSystemResource);
+    }
 
     @GetMapping("/user/info/{userId}")
     public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable String userId){
