@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const Container = styled.div`
     width: 1200px;
@@ -30,13 +28,16 @@ const HeaderContainer = styled.div`
 `;
 
 const Header = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
     return (
         <HeaderContainer>
             <Container>
-                <Link to="/join">회원가입</Link>
-                <Link to="/login">로그인</Link>
+                {!user && <Link to="/login">로그인</Link>}
+                {!user && <Link to="/join">회원가입</Link>}
+                {user && <Link to="/mypage">마이페이지</Link>}
+                {user && <Link to="/logout">로그아웃</Link>}
                 <Link to="/">메인페이지</Link>
-                <Link to="/mypage">마이페이지</Link>
             </Container>
         </HeaderContainer>
     );
