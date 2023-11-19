@@ -61,7 +61,7 @@ const Login = () => {
             userId: userId,
             pw: pw
         };
-        axios.post('http://localhost:8080/api/login', data).then(loginSuccess).catch(err => {
+        axios.post('/api/login', data).then(loginSuccess).catch(err => {
             alert("아이디 또는 비밀번호를 다시 확인해주세요.");
         });
     }
@@ -79,7 +79,7 @@ const Login = () => {
 
     // 로그인 성공시 유저 정보 요청
     const userInfo = () => {
-        axios.get(`http://localhost:8080/api/user/info/${userId}`).then(res => {
+        axios.get(`/api/user/info/${userId}`).then(res => {
             const user = JSON.stringify(res.data);
             sessionStorage.setItem("user", user);
 

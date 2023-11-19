@@ -26,23 +26,23 @@ const Articles = () => {
 
     useEffect(() => {
         // 관심 내역 조회
-        axios.get(`http://localhost:8080/api/article/heart${userId}`).then((response) => {
+        axios.get(`/api/article/heart${userId}`).then((response) => {
             setHeartArticles(response.data);
         });
         // 판매 진행 내역 조회
-        axios.get(`http://localhost:8080/api/article/sell${userId}`).then((response) => {
+        axios.get(`/api/article/sell${userId}`).then((response) => {
             setSellArticles(response.data);
         });
         // 판매 완료 내역 조회
-        axios.get(`http://localhost:8080/api/article/history/sell${userId}`).then((response) => {
+        axios.get(`/api/article/history/sell${userId}`).then((response) => {
             setHistorySellArticles(response.data);
         });
         // 구매 신청 내역 조회
-        axios.get(`http://localhost:8080/api/article/purchase${userId}`).then((response) => {
+        axios.get(`/api/article/purchase${userId}`).then((response) => {
             setPurchaseArticles(response.data);
         });
         // 구매 완료 내역 조회
-        axios.get(`http://localhost:8080/api/article/history/purchase${userId}`).then((response) => {
+        axios.get(`/api/article/history/purchase${userId}`).then((response) => {
             setHistoryPurchaseArticles(response.data);
         });
     }, []);

@@ -15,14 +15,14 @@ const Keyword = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/user/keyword/${user.userId}`).then((response) => {
+        axios.get(`/api/user/keyword/${user.userId}`).then((response) => {
             const data = response.data.keywords;
             setKeywordData(data);
         });
     }, []);
 
     const deleteKeyword = (keyword) => {
-        axios.delete(`http://localhost:8080/api/user/keyword/${user.userId}/${keyword}`).then((response) => {
+        axios.delete(`/api/user/keyword/${user.userId}/${keyword}`).then((response) => {
             if (response.data.message == "success") {
                 alert("키워드가 삭제되었습니다.");
                 window.location.reload();

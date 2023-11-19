@@ -26,7 +26,8 @@ services:
 
   frontend:
     container_name: steam-front
-    image: shingyeongjun/steam-front:latest
+    # image: shingyeongjun/steam-front:latest
+    build: ./frontend/
     volumes:
       - ./images:/app/public/assets/images
     restart: on-failure

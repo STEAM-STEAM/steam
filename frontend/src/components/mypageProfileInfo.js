@@ -87,7 +87,7 @@ const ProfileInfo = () => {
                 keyword: keywordValue
             }
     
-            axios.post("http://localhost:8080/api/user/keyword", data).then((response) => {
+            axios.post("/api/user/keyword", data).then((response) => {
                 const data = response.data;
                 if (data.message === "success") {
                     alert("키워드가 추가되었습니다.");

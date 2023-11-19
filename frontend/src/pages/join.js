@@ -102,7 +102,7 @@ const Join = () => {
             console.log(pair[0]+ ', ' + pair[1]); 
         }
 
-        axios.post('http://localhost:8080/api/join', formData, {
+        axios.post('/api/join', formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }

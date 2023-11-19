@@ -33,7 +33,7 @@ const Index = () => {
     const region = user ? "/"+user.region : "";
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/articles/recent${region}`).then((response) => {
+        axios.get(`/api/articles/recent${region}`).then((response) => {
             const data = response.data;
             setArticleData(data);
         });

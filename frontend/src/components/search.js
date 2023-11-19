@@ -79,7 +79,7 @@ const Search = ({ onDataChange }) => {
         if (region === '') setRegion("null");
         if (searchWord === '') setSearchWord("null");
         
-        axios.get(`http://localhost:8080/api/article/search?region=${region}&keyword=${searchWord}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+        axios.get(`/api/article/search?region=${region}&keyword=${searchWord}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
         .then((res) => {
             console.log(res.data);
             onDataChange(res.data);

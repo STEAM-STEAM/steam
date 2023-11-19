@@ -10,7 +10,7 @@ RUN yarn add @emotion/styled
 RUN yarn add -D @craco/craco
 RUN yarn add -D @emotion/babel-preset-css-prop
 RUN yarn add react-router-dom
-RUN yarn **add** axios
+RUN yarn add axios
 RUN yarn add react-select
 RUN yarn add react-simple-image-slider
 RUN yarn add @types/react-modal
