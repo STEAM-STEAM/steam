@@ -1,4 +1,17 @@
+# 공통 설정
+server:
+  tomcat:
+    max-http-form-post-size: 10GB
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10GB
+      max-request-size: 10GB
   datasource:
     url: jdbc:h2:tcp://localhost/~/steam
     username: sa
@@ -12,16 +25,21 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
 
-  servlet:
-    multipart:
-      max-file-size: 10GB
-      max-request-size: 10GB
-
-server:
-  tomcat:
-    max-http-form-post-size: 10GB
-
-
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+# dev 프로파일 설정
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  datasource:
+    url: jdbc:mysql://steam-db:3306/steam?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: steam
+    password: steam
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect

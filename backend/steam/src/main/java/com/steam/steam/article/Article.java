@@ -25,7 +25,7 @@ public class Article {
 
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name="user_id")
     private User user;
 
@@ -57,4 +57,5 @@ public class Article {
     public void setImgDir(Path url) {
         this.imgDir = url.toString();
     }
+
 }

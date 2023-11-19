@@ -1,10 +1,8 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "@emotion/styled";
+import Select from 'react-select'
 import { Link } from "react-router-dom";
-
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-// import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import axios from 'axios'
 
 const Container = styled.div`
     width: 100%;
@@ -12,8 +10,9 @@ const Container = styled.div`
     height: 40px;
 `;
 
-const LocationSelector = styled.select`
+const LocationSelector = styled.div`
     width: 200px;
+    float: left;
     height: 100%;
     margin-right: 30px;
     color : #999;
@@ -22,6 +21,7 @@ const LocationSelector = styled.select`
 const PriceInput = styled.input`
     height: 100%;
     width: 200px;
+    float: left;
 `;
 
 const SearchInput = styled.input`
@@ -46,27 +46,81 @@ const SearchBtn = styled.button`
     border-radius: 20px;
 `;
 
-const Search = () => {
+const options = [
+    { value: '서울', label: '서울' },
+    { value: '인천', label: '인천' },
+    { value: '대전', label: '대전' },
+    { value: '광주', label: '광주' },
+    { value: '부산', label: '부산' },
+    { value: '대구', label: '대구' },
+    { value: '울산', label: '울산' }
+];
+
+// 검색 컴포넌트
+const Search = ({ onDataChange }) => {
+    const [region, setRegion] = useState('');
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(0);
+    const [searchWord, setSearchWord] = useState('');
+
+    // 검색 버튼을 눌렀을 때
+    const search = () => {
+
+        if(minPrice > maxPrice){
+            alert("최소 가격이 최대 가격보다 큽니다.");
+            return;
+        }
+
+        if (minPrice < 0 || maxPrice < 0) {
+            alert("가격은 0원 이상이어야 합니다.");
+            return;
+        }
+
+        if (region === '') setRegion("null");
+        if (searchWord === '') setSearchWord("null");
+        
+        axios.get(`http://localhost:8080/api/article/search?region=${region}&keyword=${searchWord}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+        .then((res) => {
+            console.log(res.data);
+            onDataChange(res.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     return (
         <Container>
             <LocationSelector >
-                <option value="" disabled selected style={{display: "none"}}>
-                    지역을 선택해주세요.
-                </option>
-                <option value="서울">서울</option>
-                <option value="인천">인천</option>
-                <option value="대전">대전</option>
-                <option value="광주">광주</option>
-                <option value="부산">부산</option>
-                <option value="대구">대구</option>
-                <option value="울산">울산</option>
+                <Select 
+                    id="searchRegion"
+                    options={options} 
+                    placeholder="활동지역" 
+                    onChange={(e) => setRegion(e.value)}
+                    value={options.filter((val) => {
+                        return val.value === region;
+                    })}
+                    required 
+                />
             </LocationSelector>
-            <PriceInput type="number" placeholder="최소 가격" />&nbsp;~&nbsp; 
-            <PriceInput type="number" placeholder="최대 가격" />
-            <SearchBtn>
+            <PriceInput 
+                type="number" 
+                placeholder="최소 가격"
+                onChange={(e) => setMinPrice(e.target.value)}
+            />
+            <span style={{float:"left", lineHeight: "35px"}}> &nbsp;~&nbsp;</span> 
+            <PriceInput
+                type="number" 
+                placeholder="최대 가격"
+                onChange={(e) => setMaxPrice(e.target.value)} 
+            />
+            <SearchBtn onClick={()=> search()}>
                 검색
             </SearchBtn>
-            <SearchInput type="text" placeholder="검색어를 입력하세요." />
+            <SearchInput 
+                type="text" 
+                placeholder="검색어를 입력하세요."
+                onChange={(e) => setSearchWord(e.target.value)}
+            />
         </Container>
     )
 }
