@@ -107,9 +107,9 @@ public class UserController {
         return ResponseEntity.ok().body(new MessageResponseDto(message));
     }
 
-    @DeleteMapping("/user/keyword")
-    public ResponseEntity<MessageResponseDto> deleteKeywordOfUser(@RequestBody KeywordRequestDto keywordRequestDto){
-        userService.deleteKeywordOfUser(keywordRequestDto);
+    @DeleteMapping("/user/keyword/{userId}/{keyword}")
+    public ResponseEntity<MessageResponseDto> deleteKeywordOfUser(@PathVariable("userId") String userId, @PathVariable("keyword") String keyword){
+        userService.deleteKeywordOfUser(new KeywordRequestDto(userId, keyword));
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
     }
 }
