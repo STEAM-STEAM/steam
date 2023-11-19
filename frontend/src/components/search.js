@@ -58,13 +58,14 @@ const options = [
 
 // 검색 컴포넌트
 const Search = ({ onDataChange }) => {
-    const [region, setRegion] = useState(null);
+    const [region, setRegion] = useState('');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
-    const [searchWord, setSearchWord] = useState(null);
+    const [searchWord, setSearchWord] = useState('');
 
     // 검색 버튼을 눌렀을 때
     const search = () => {
+
         if(minPrice > maxPrice){
             alert("최소 가격이 최대 가격보다 큽니다.");
             return;
@@ -75,14 +76,11 @@ const Search = ({ onDataChange }) => {
             return;
         }
 
-        const data = {
-            region: region,
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            keyword: searchWord
-        };
-
-        axios.post('http://localhost:8080/api/article/search', data).then((res) => {
+        if (region === '') setRegion("null");
+        if (searchWord === '') setSearchWord("null");
+        
+        axios.get(`http://localhost:8080/api/article/search?region=${region}&keyword=${searchWord}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+        .then((res) => {
             console.log(res.data);
             onDataChange(res.data);
         }).catch((err) => {
