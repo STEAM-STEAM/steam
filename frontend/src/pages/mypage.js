@@ -73,6 +73,9 @@ const customModalStyles = {
 };
 
 const ProfileInfo = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) window.location.href = "/login";
+
     const publicUrl = process.env.PUBLIC_URL;
     const profile_img = "image1.png";
 
