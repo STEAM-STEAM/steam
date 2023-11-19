@@ -90,9 +90,22 @@ public class ArticleService {
     }
 
     public List<ArticleSummary> getRecentArticlesOnSearch(SearchRequestDto requestDto) {
-        List<Article> articles = articleRepository.findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc(
-                Region.valueOf(requestDto.region()), requestDto.keyword(), requestDto.minPrice(), requestDto.maxPrice()
-        );
+        String region = requestDto.region();
+        String keyword = requestDto.keyword();
+        Integer minPrice = requestDto.minPrice();
+        Integer maxPrice = requestDto.maxPrice() == 0 ? Integer.MAX_VALUE : requestDto.maxPrice();
+
+        List<Article> articles;
+        if(region.equals("null") && keyword.equals("null")){
+            articles = articleRepository.findByPriceBetweenOrderByCreatedTimeDesc(minPrice, maxPrice);
+        }else if(region.equals("null")){
+            articles = articleRepository.findByContentContainingAndPriceBetweenOrderByCreatedTimeDesc(keyword, minPrice, maxPrice);
+        }else if(keyword.equals("null")){
+            articles = articleRepository.findByRegionAndPriceBetweenOrderByCreatedTimeDesc(Region.valueOf(region), minPrice, maxPrice);
+        }else{
+            articles = articleRepository.findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc(
+                    Region.valueOf(requestDto.region()), requestDto.keyword(), requestDto.minPrice(), requestDto.maxPrice());
+        }
 
         return toArticleSummaries(articles);
     }
