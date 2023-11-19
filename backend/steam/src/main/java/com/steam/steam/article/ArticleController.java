@@ -29,7 +29,7 @@ public class ArticleController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("price") Integer price,
-            @RequestParam("image") List<MultipartFile> images) throws IOException {
+            @RequestParam("imageUrls") List<MultipartFile> images) throws IOException {
 
         ArticleRequestDto requestDto = ArticleRequestDto.builder()
                                                     .userId(userId)
