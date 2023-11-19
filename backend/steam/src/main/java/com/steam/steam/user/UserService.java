@@ -72,7 +72,7 @@ public class UserService {
         Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
         fileStorageService.storeImage(image, filePath);
         User user = userRepository.getReferenceById(userId);
-        user.setProfileImgUrl(accessPath);
+        user.setProfileImgUrl(filePath);
         userRepository.save(user);
     }
 
