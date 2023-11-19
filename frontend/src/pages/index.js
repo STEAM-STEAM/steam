@@ -32,10 +32,12 @@ const Index = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
     const region = user ? "/"+user.region : "";
 
-    // axios.get(`http://localhost:8080/api/articles/recent${region}`).then((response) => {
-    //     const data = response.data;
-    //     setArticleData(data);
-    // });
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/articles/recent${region}`).then((response) => {
+            const data = response.data;
+            setArticleData(data);
+        });
+    }, []);
 
     const handleDataChange = (data) => {
         setArticleData(data);
