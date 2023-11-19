@@ -43,7 +43,7 @@ const MainItem = ({ articleId, title, price, userNickname, imgLinkUrl }) => {
                 <img src={`${publicUrl}/assets/images/${imgLinkUrl}`} alt="img" />
                 <div>
                     <p>
-                        <span class="material-symbols-outlined">person</span>
+                        <span className="material-symbols-outlined">person</span>
                         {userNickname}
                     </p>
                     <p>{title}</p>
