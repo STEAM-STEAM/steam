@@ -39,7 +39,7 @@ const MainItem = ({ articleId, title, price, userNickname, imgLinkUrl }) => {
 
     return (
         <Item>
-            <Link to="/detail">
+            <Link to={`/detail/${articleId}`}>
                 <img src={`${publicUrl}/assets/images/${imgLinkUrl}`} alt="img" />
                 <div>
                     <p>
