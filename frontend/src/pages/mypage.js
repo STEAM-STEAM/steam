@@ -40,7 +40,6 @@ const KeywordBtn = styled.button`
     color: #1DA1F2;
 `;
 
-
 const customModalStyles = {
     overlay: {
         backgroundColor: " rgba(0, 0, 0, 0.4)",
@@ -138,11 +137,11 @@ const ProfileInfo = () => {
             <PopupMessage />
             <div>
                 <div>
-                    <p><b style={{fontSize: 18}}>유저 닉네임</b></p>
-                    <p>활동지역 <b>대전</b></p>
+                    <p><b style={{fontSize: 18}}>{user.nickname}</b></p>
+                    <p>활동지역 <b>{user.region}</b></p>
                 </div>
                 <div>
-                    <img src={`${publicUrl}/assets/images/${profile_img}`} alt="img" />
+                    <img src={publicUrl+user.imgUrl} alt="img" />
                 </div>
             </div>
             <div>
