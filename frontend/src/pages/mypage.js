@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "@emotion/styled";
 import MainItem from "../components/mainItem";
 import Modal from 'react-modal';
+import Keyword from "../components/mypageKeyword";
 import axios from 'axios';
 
 const Profile = styled.div`
@@ -39,11 +40,6 @@ const KeywordBtn = styled.button`
     color: #1DA1F2;
 `;
 
-const Tag = styled.span`
-    font-size: 14px;
-    margin-right: 10px;
-    color: #1DA1F2;
-`;
 
 const customModalStyles = {
     overlay: {
@@ -74,17 +70,36 @@ const customModalStyles = {
 };
 
 const ProfileInfo = () => {
+    // 로그인 여부 확인
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (!user) window.location.href = "/login";
 
     const publicUrl = process.env.PUBLIC_URL;
-
-    const user = JSON.parse(sessionStorage.getItem("user")) ?? "";
-    console.log(user);
+    const profile_img = "image1.png";
 
     const [modalOpen, setModalOpen] = useState(false);
 
+    // 키워드 추가 팝업
     const PopupMessage = () => {
+        const [keywordValue, setKeywordValue] = useState('');
+
+        const addKeyword = () => {
+            const data = {
+                userId: user.userId,
+                keyword: keywordValue
+            }
+    
+            axios.post("http://localhost:8080/api/user/keyword", data).then((response) => {
+                const data = response.data;
+                if (data.message === "success") {
+                    alert("키워드가 추가되었습니다.");
+                    window.location.reload();
+                } else {
+                    alert("키워드 추가에 실패하였습니다.");
+                }
+            });
+        }
+
         return (
             <Modal
                 isOpen={modalOpen}
@@ -97,26 +112,37 @@ const ProfileInfo = () => {
                 <div style={{width: "100%", float: "left", padding: 20, textAlign: "center"}}>
                     <p style={{fontSize: 22, fontWeight: 500, marginBottom: 10}}>키워드 추가하기</p>
                     <div style={{width: "100%", float: "left"}}>
-                        <input placeholder="키워드를 입력해주세요."
+                        <input 
+                            placeholder="키워드를 입력해주세요."
                             style={{width: "100%", height: 40, border: "solid 1px #ddd", borderRadius: 5, padding: 10, marginBottom: 10}}
+                            onChange={(e) => setKeywordValue(e.target.value)}
                         />
                     </div>
                     <button style={{width: 100, height: 40, background: "#fff", color: "#1DA1F2", border: "solid 1px #1DA1F2"}} onClick={() => setModalOpen(false)}>취소</button>
-                    <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "none", marginLeft: 10}} onClick={() => setModalOpen(false)}>확인</button>
+                    <button 
+                        style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "none", marginLeft: 10}} 
+                        onClick={() => {
+                            setModalOpen(false);
+                            addKeyword();
+                            }
+                        }>
+                        확인
+                    </button>
                 </div>
             </Modal>
-    )}
+        );
+    }
 
     return (
         <Profile>
             <PopupMessage />
             <div>
                 <div>
-                    <p><b style={{fontSize: 18}}>{user.nickname}</b></p>
-                    <p>활동지역 <b>{user.region}</b></p>
+                    <p><b style={{fontSize: 18}}>유저 닉네임</b></p>
+                    <p>활동지역 <b>대전</b></p>
                 </div>
                 <div>
-                    <img src={`${publicUrl}/assets/images/${user.profileImgUrl}`} alt="img" />
+                    <img src={`${publicUrl}/assets/images/${profile_img}`} alt="img" />
                 </div>
             </div>
             <div>
@@ -124,10 +150,7 @@ const ProfileInfo = () => {
                 <KeywordBtn onClick={() => setModalOpen(true)}>키워드 추가</KeywordBtn>
             </div>
             <div>
-                <Tag>#냉장고</Tag>
-                <Tag>#TV</Tag>
-                <Tag>#스타일러</Tag>
-                <Tag>#건조기</Tag>
+                <Keyword />
             </div>
         </Profile>
     );
