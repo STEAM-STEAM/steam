@@ -1,6 +1,5 @@
 package com.steam.steam.user;
 
-import com.steam.steam.article.Article;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,8 @@ public class User {
     private Region region;
     private String nickname;
     private String profileImgUrl;
+    private boolean blacklisted;
+
 
     public User(String id, String pw, String nickname, String region) throws IllegalArgumentException {
         this.id = id;
@@ -31,5 +32,13 @@ public class User {
 
     public void setProfileImgUrl(Path path) {
         this.profileImgUrl = path.toString();
+    }
+
+    public void setBlacklisted(boolean blacklisted) {
+        this.blacklisted = blacklisted;
+    }
+
+    public boolean isBlacklisted() {
+        return blacklisted;
     }
 }

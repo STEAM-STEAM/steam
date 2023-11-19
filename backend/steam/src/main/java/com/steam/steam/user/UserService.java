@@ -1,10 +1,8 @@
 package com.steam.steam.user;
 
+import com.steam.steam.FileStorageService;
 import com.steam.steam.user.dto.*;
-import com.steam.steam.user.exception.PasswordValidationException;
-import com.steam.steam.user.exception.UserAlreadyExistsException;
-import com.steam.steam.user.exception.UserIdNotExistsException;
-import com.steam.steam.user.exception.UserIdValidationException;
+import com.steam.steam.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +20,27 @@ import static com.steam.steam.user.KeywordMapper.toKeywordResponseDto;
 public class UserService {
     private final UserRepository userRepository;
     private final KeywordRepository keywordRepository;
+    private final FileStorageService fileStorageService;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, KeywordRepository keywordRepository) {
+    public UserService(UserRepository userRepository, KeywordRepository keywordRepository, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.keywordRepository = keywordRepository;
+        this.fileStorageService = fileStorageService;
     }
 
+    @Transactional
     public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
+
+        if (userRepository.findById(user.getId()).isPresent()) {
+            throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
+        }
+
+        userRepository.save(user);
         if(!image.isEmpty()){
-            user.setProfileImgUrl(filePath);
+            uploadProfileImage(user.getId(), filePath, image);
         }
         if (user.getId().length() < 8) {
             throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
@@ -40,26 +48,25 @@ public class UserService {
         if (user.getPw().length() < 8) {
             throw new PasswordValidationException("[ERROR] 회원가입 비밀번호 형식 아님");
         }
-        if (userRepository.findById(user.getId()).isPresent()) {
-            throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
-        }
-        userRepository.save(user);
     }
 
-    public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException {
+    public void login(LoginRequestDto loginDto) throws UserIdNotExistsException, PasswordValidationException, BlacklistedUserException {
         Optional<User> optionalUser = userRepository.findById(loginDto.userId());
-
         if (optionalUser.isEmpty()) {
             throw new UserIdNotExistsException("[ERROR] 로그인시 존재하지 않는 아이디");
         }
         User existingUser = optionalUser.get();
+        if (existingUser.isBlacklisted()) {
+            throw new BlacklistedUserException("[Error] 블랙리스트 유저: 로그인 불가");
+        }
         if (!loginDto.pw().equals(existingUser.getPw())) {
             throw new PasswordValidationException("[ERROR] 로그인시 비밀번호 틀림");
         }
     }
 
     @Transactional
-    public void uploadProfileImage(String userId, Path filePath) {
+    public void uploadProfileImage(String userId, Path filePath, MultipartFile image) {
+        fileStorageService.storeImage(image, filePath);
         User user = userRepository.getReferenceById(userId);
         user.setProfileImgUrl(filePath);
         userRepository.save(user);
