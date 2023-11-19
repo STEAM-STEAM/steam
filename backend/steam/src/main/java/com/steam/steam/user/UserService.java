@@ -22,6 +22,8 @@ public class UserService {
     private final KeywordRepository keywordRepository;
     private final FileStorageService fileStorageService;
 
+    private static final Path userImageDir = Path.of("./images/user/");
+
 
     @Autowired
     public UserService(UserRepository userRepository, KeywordRepository keywordRepository, FileStorageService fileStorageService) {
@@ -31,7 +33,7 @@ public class UserService {
     }
 
     @Transactional
-    public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
+    public void join(UserRequestDto userDto, MultipartFile image) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
 
         if (userRepository.findById(user.getId()).isPresent()) {
@@ -40,7 +42,7 @@ public class UserService {
 
         userRepository.save(user);
         if(!image.isEmpty()){
-            uploadProfileImage(user.getId(), filePath, image);
+            uploadProfileImage(user.getId(), image);
         }
         if (user.getId().length() < 8) {
             throw new UserIdValidationException("[ERROR] 회원가입 아이디 형식 아님");
@@ -65,7 +67,8 @@ public class UserService {
     }
 
     @Transactional
-    public void uploadProfileImage(String userId, Path filePath, MultipartFile image) {
+    public void uploadProfileImage(String userId, MultipartFile image) {
+        Path filePath = userImageDir.resolve(userId).resolve("profile.jpg");
         fileStorageService.storeImage(image, filePath);
         User user = userRepository.getReferenceById(userId);
         user.setProfileImgUrl(filePath);
@@ -107,6 +110,11 @@ public class UserService {
     public void deleteKeywordOfUser(KeywordRequestDto keywordRequestDto) {
         User user = userRepository.getReferenceById(keywordRequestDto.userId());
         keywordRepository.deleteByUserAndKeyword(user, keywordRequestDto.keyword());
+    }
+
+    public Path getProfileUrl(String userId) {
+        User user = userRepository.getReferenceById(userId);
+        return Path.of(user.getProfileImgUrl());
     }
 }
 
