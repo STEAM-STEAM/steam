@@ -6,19 +6,11 @@ server:
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
-
 spring:
   servlet:
     multipart:
       max-file-size: 10GB
       max-request-size: 10GB
-
-# test 프로파일 설정
----
-spring:
-  config:
-    activate:
-      on-profile: "test"
   datasource:
     url: jdbc:h2:tcp://localhost/~/steam
     username: sa
@@ -40,7 +32,7 @@ spring:
       on-profile: "dev"
   datasource:
     url: jdbc:mysql://steam-db:3306/steam?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
+    username: steam
     password: steam
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:

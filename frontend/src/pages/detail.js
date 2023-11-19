@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import styled from "@emotion/styled";
+import { useParams } from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
 import Modal from 'react-modal';
+import axios from "axios";
 
 const Container = styled.div`
     width: 100%;
@@ -155,13 +157,24 @@ const Comment = () => {
 
 
 const Detail = () => {
+    const params = useParams();
+    const articleId = params.articleId;
+    const user = JSON.parse(sessionStorage.getItem("user"));
 
-    const images = [
-        { url: publicUrl+"image2.png" },
-        { url: publicUrl+"images/2.jpg" },
-        { url: publicUrl+"images/3.jpg" },
-        { url: publicUrl+"images/4.jpg" }
-    ];
+    const [articleData, setArticleData] = useState({});
+
+    axios.get(`http://localhost:8080/api/articles/${articleId}`).then((response) => {
+        setArticleData(response.data);
+    }).catch((err) => {
+        console.log(err);
+    });
+
+    // const images = [
+    //     { url: publicUrl+"image2.png" },
+    //     { url: publicUrl+"images/2.jpg" },
+    //     { url: publicUrl+"images/3.jpg" },
+    //     { url: publicUrl+"images/4.jpg" }
+    // ];
 
     const [modalOpen, setModalOpen] = useState(false);
     const [sellModalOpen, setSellModalOpen] = useState(false);
@@ -203,7 +216,7 @@ const Detail = () => {
                             <p>유저1</p>
                             <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
                         </div>
-                        <div>
+                        {/* <div>
                             <p>유저1</p>
                             <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
                         </div>
@@ -214,17 +227,28 @@ const Detail = () => {
                         <div>
                             <p>유저1</p>
                             <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
-                        </div>
+                        </div> */}
                     </List>
                     <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "solid 1px #fff"}} onClick={() => setSellModalOpen(false)}>취소</button>
                 </div>
             </Modal>
     )}
 
+    const SellComponent = () => {
+        return(
+            <SellBtn onClick={() => setSellModalOpen(true)}>
+                <span style={{float: "left", left: "50%", transform: "translateX(-50%)"}}>
+                    <span className="material-symbols-outlined" style={{float: "left"}}>local_mall</span>
+                    <span style={{float: "left"}}> 판매자 확정</span>
+                </span>
+            </SellBtn>
+        )
+    }
+
     return (
         <div style={{width: "100%", float: "left"}}>
-            <PopupMessage message={"핸드크림 새상품"} />
-            <SellPopupMessage message={"핸드크림 새상품"} />
+            <PopupMessage message={articleData.title} />
+            <SellPopupMessage message={articleData.title} />
 
             <div style={{width: 1000, float: "left", left: "50%", transform: "translateX(-50%)"}}>
                 <p style={{fontSize: 25, fontWeight: 500, marginTop: 50, color: "#333"}}>상품 상세</p>
@@ -233,7 +257,7 @@ const Detail = () => {
                         <SimpleImageSlider
                             width={"100%"}
                             height={250}
-                            images={images}
+                            images={articleData.imgUrls}
                             showBullets={true}
                             showNavs={true}
                         />
@@ -241,17 +265,17 @@ const Detail = () => {
                     <div style={{width: "60%", float: "right", padding: "15px 30px"}}>
                         <p style={{width: "100%", float: "left", color: "#555", borderBottom: "1px solid #ddd", paddingBottom: 10}}>
                             <img 
-                                src={`${publicUrl}user1.jpg`} 
+                                src={publicUrl+articleData.sellerProfileImgUrl} 
                                 alt="img" 
                                 style={{width: 35, height: 35, borderRadius: "50%", float: "left", objectFit: "cover"}} 
                             />
                             {/* <span style={{float: "left"}} class="material-symbols-outlined">account_box</span> */}
-                            <span style={{marginLeft: 10, float: "left", fontSize: 20, marginTop: 3}}><b style={{fontSize: 20}}>경준</b>님의 상품</span>
+                            <span style={{marginLeft: 10, float: "left", fontSize: 20, marginTop: 3}}><b style={{fontSize: 20}}>{articleData.sellerNickname}</b>님의 상품</span>
                         </p>
-                        <p style={{fontSize: 23, fontWeight: 500, float: "left", marginTop:10}}>핸드크림 새상품 판매합니다.</p>
+                        <p style={{fontSize: 23, fontWeight: 500, float: "left", marginTop:10}}>{articleData.title}</p>
                         <Info />
 
-                        <p style={{fontSize: 30, fontWeight: 500,marginBottom: 10, float:"left"}}>20,000\</p>
+                        <p style={{fontSize: 30, fontWeight: 500,marginBottom: 10, float:"left"}}>{parseInt(articleData.price).toLocaleString()}\</p>
 
                         <div style={{width: "100%", float: "left"}}>
                             <LikeBtn>
@@ -260,18 +284,14 @@ const Detail = () => {
                                     <span style={{float: "left"}}> 관심등록</span>
                                 </span>
                             </LikeBtn>
+                            {/* <SellComponent /> */}
                             <BuyBtn onClick={() => setModalOpen(true)}>
                                 <span style={{float: "left", left: "50%", transform: "translateX(-50%)"}}>
                                     <span className="material-symbols-outlined" style={{float: "left"}}>local_mall</span>
                                     <span style={{float: "left"}}> 구매신청</span>
                                 </span>
                             </BuyBtn>
-                            <SellBtn onClick={() => setSellModalOpen(true)}>
-                                <span style={{float: "left", left: "50%", transform: "translateX(-50%)"}}>
-                                    <span className="material-symbols-outlined" style={{float: "left"}}>local_mall</span>
-                                    <span style={{float: "left"}}> 판매자 확정</span>
-                                </span>
-                            </SellBtn>
+
                         </div>
                     </div>
                 </Container>

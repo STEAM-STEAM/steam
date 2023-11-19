@@ -33,8 +33,12 @@ public class UserService {
     @Transactional
     public void join(UserRequestDto userDto, MultipartFile image, Path filePath) throws UserAlreadyExistsException, PasswordValidationException, IllegalArgumentException, UserIdValidationException {
         User user = UserMapper.toEntity(userDto);
-        userRepository.save(user);
 
+        if (userRepository.findById(user.getId()).isPresent()) {
+            throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
+        }
+
+        userRepository.save(user);
         if(!image.isEmpty()){
             uploadProfileImage(user.getId(), filePath, image);
         }
@@ -43,9 +47,6 @@ public class UserService {
         }
         if (user.getPw().length() < 8) {
             throw new PasswordValidationException("[ERROR] 회원가입 비밀번호 형식 아님");
-        }
-        if (userRepository.findById(user.getId()).isPresent()) {
-            throw new UserAlreadyExistsException("[ERROR] 회원가입 아이디 중복");
         }
     }
 
