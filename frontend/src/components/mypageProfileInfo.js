@@ -140,7 +140,7 @@ const ProfileInfo = () => {
                     <p>활동지역 <b>{user.region}</b></p>
                 </div>
                 <div>
-                    <img src={publicUrl+user.imgUrl} alt="img" />
+                    <img src={"/api/user/profile/"+user.userId} alt="img" />
                 </div>
             </div>
             <div>

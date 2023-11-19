@@ -29,7 +29,7 @@ services:
     # image: shingyeongjun/steam-front:latest
     build: ./frontend/
     volumes:
-      - ./images:/app/public/assets/images
+      - ./images:/app/public/assets/steam-images
     restart: on-failure
     ports:
       - 3000:3000
