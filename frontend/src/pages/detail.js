@@ -162,16 +162,11 @@ const Detail = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
     const [articleData, setArticleData] = useState({});
-<<<<<<< Updated upstream
-
-    axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
-=======
     const [imgLinkUrls, setImgLinkUrls] = useState({});
     
     useEffect(() => {
     axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
         console.log(response.data)    
->>>>>>> Stashed changes
         setArticleData(response.data);
         const imgList = response.data.imgLinkUrls;
 
