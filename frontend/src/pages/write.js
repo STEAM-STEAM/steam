@@ -81,12 +81,13 @@ const Write = () => {
 
         let imageUrls = [];
         for (let i = 0; i < images.length; i++) {
-            imageUrls.push(images[i]);
+            // imageUrls.push(images[i]);
+            formData.append("image", images[i]);
         }
 
-        formData.append("imageUrls", imageUrls);
+        // formData.append("image", imageUrls);
 
-        console.log(formData.get("imageUrls"))
+        console.log(formData.get("image"))
 
         let entries = formData.entries();
         for (const pair of entries) {
