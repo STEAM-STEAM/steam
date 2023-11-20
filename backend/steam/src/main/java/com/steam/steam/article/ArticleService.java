@@ -1,7 +1,6 @@
 package com.steam.steam.article;
 
 import com.steam.steam.FileStorageService;
-import com.steam.steam.admin.UserIdDto;
 import com.steam.steam.article.dto.*;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
@@ -10,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class ArticleService {
     private final PurchaseRequestRepository purchaseRequestRepository;
     private final HistoryRepository historyRepository;
 
-    private static final Path articleImageDir = Path.of("./src/main/java/com/steam/steam/article/pic/");
+    private static final Path articleImageDir = Path.of("images/article/");
     private final FileStorageService fileStorageService;
 
     @Autowired
@@ -39,12 +41,13 @@ public class ArticleService {
         this.fileStorageService = fileStorageService;
     }
 
-    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) {
+    public Long createArticle(ArticleRequestDto articleDto, List<MultipartFile> images) throws IOException {
         Article article = articleMapper.toEntity(articleDto);
         articleRepository.save(article);
         Long id = article.getId();
 
         Path imageDir = articleImageDir.resolve(String.valueOf(id));
+        Files.createDirectories(imageDir.getParent());
         List<Path> filePaths = new ArrayList<>();
         for(int i=0; i<images.size(); i++) {
             filePaths.add(imageDir.resolve(i + ".jpg"));
@@ -87,9 +90,22 @@ public class ArticleService {
     }
 
     public List<ArticleSummary> getRecentArticlesOnSearch(SearchRequestDto requestDto) {
-        List<Article> articles = articleRepository.findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc(
-                Region.valueOf(requestDto.region()), requestDto.keyword(), requestDto.minPrice(), requestDto.maxPrice()
-        );
+        String region = requestDto.region();
+        String keyword = requestDto.keyword();
+        Integer minPrice = requestDto.minPrice();
+        Integer maxPrice = requestDto.maxPrice() == 0 ? Integer.MAX_VALUE : requestDto.maxPrice();
+
+        List<Article> articles;
+        if(region.equals("null") && keyword.equals("null")){
+            articles = articleRepository.findByPriceBetweenOrderByCreatedTimeDesc(minPrice, maxPrice);
+        }else if(region.equals("null")){
+            articles = articleRepository.findByContentContainingAndPriceBetweenOrderByCreatedTimeDesc(keyword, minPrice, maxPrice);
+        }else if(keyword.equals("null")){
+            articles = articleRepository.findByRegionAndPriceBetweenOrderByCreatedTimeDesc(Region.valueOf(region), minPrice, maxPrice);
+        }else{
+            articles = articleRepository.findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc(
+                    Region.valueOf(requestDto.region()), requestDto.keyword(), requestDto.minPrice(), requestDto.maxPrice());
+        }
 
         return toArticleSummaries(articles);
     }

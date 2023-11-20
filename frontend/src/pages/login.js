@@ -69,8 +69,6 @@ const Login = () => {
     const loginSuccess = (res) => {
         const message = res.data.message;
         if(message === "success") {
-            alert("로그인 성공");
-            window.location.href = "/";
             userInfo();
         } else if (message === "id_error") {
             alert("아이디를 다시 확인해주세요.");
@@ -82,8 +80,11 @@ const Login = () => {
     // 로그인 성공시 유저 정보 요청
     const userInfo = () => {
         axios.get(`http://localhost:8080/api/user/info/${userId}`).then(res => {
-            const user = JSON.parse(res.data);
+            const user = JSON.stringify(res.data);
             sessionStorage.setItem("user", user);
+
+            alert("로그인 성공");
+            window.location.href = "/";
         });
     }
 

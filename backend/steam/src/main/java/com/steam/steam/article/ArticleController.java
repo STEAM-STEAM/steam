@@ -7,14 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class ArticleController {
     private final ArticleService articleService;
-
 
     @Autowired
     public ArticleController(ArticleService articleService) {
@@ -28,7 +29,7 @@ public class ArticleController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("price") Integer price,
-            @RequestParam("image") List<MultipartFile> images) {
+            @RequestParam("image") List<MultipartFile> images) throws IOException {
 
         ArticleRequestDto requestDto = ArticleRequestDto.builder()
                                                     .userId(userId)
@@ -62,7 +63,12 @@ public class ArticleController {
     }
 
     @GetMapping("/article/search")
-    public ResponseEntity<List<ArticleSummary>> searchEntities(@RequestBody SearchRequestDto requestDto) {
+    public ResponseEntity<List<ArticleSummary>> searchEntities(
+            @RequestParam("region") String region,
+            @RequestParam("keyword") String keyword,
+            @RequestParam("minPrice") Integer minPrice,
+            @RequestParam("maxPrice") Integer maxPrice) {
+        SearchRequestDto requestDto = new SearchRequestDto(region, keyword, minPrice, maxPrice);
         List<ArticleSummary> articles = articleService.getRecentArticlesOnSearch(requestDto);
         return ResponseEntity.ok().body(articles);
     }
