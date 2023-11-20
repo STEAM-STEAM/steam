@@ -20,7 +20,8 @@ const Comment = ({articleId}) => {
             articleId: articleId,
             userId: user.userId
         }).then((response) => {
-            if (response.data.message == "success") {
+            console.log(response);
+            if (response.data == "OK") {
                 console.log(response.data);
                 alert("댓글이 등록되었습니다.");
                 window.location.reload();

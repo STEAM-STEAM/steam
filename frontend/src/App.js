@@ -6,6 +6,7 @@ import Join from './pages/join';
 import Header from './components/header';
 import MyPage from './pages/mypage';
 import Detail from './pages/detail';
+import Admin from './pages/admin';
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <div style={{float: "left", marginTop: 75, width:"100%"}}></div>
       <Routes>
         <Route exact path="/" element={<Index />} />
+        <Route exact path="/admin" element={<Admin />} />
         <Route exact path="/write" element={<Write />} />
         <Route exact path="/join" element={<Join />} />
         <Route exact path="/login" element={<Login />} />

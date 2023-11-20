@@ -81,16 +81,17 @@ const Write = () => {
 
         let imageUrls = [];
         for (let i = 0; i < images.length; i++) {
-            imageUrls.push(images[i]);
+            // imageUrls.push(images[i]);
+            formData.append("image", images[i]);
         }
 
-        formData.append("imageUrls", imageUrls);
+        // formData.append("image", imageUrls);
 
-        console.log(formData.get("imageUrls"))
+        console.log(formData.get("image"))
 
         let entries = formData.entries();
         for (const pair of entries) {
-            console.log(pair[0]+ ', ' + pair[1]); 
+            console.log(pair[0]+ ' ' + pair[1]); 
         }
 
 
@@ -127,7 +128,7 @@ const Write = () => {
     }
 
     return (
-        <div style={{width: 1200, float: "left", left: "50%", transform: "translateX(-50%)"}}>
+        <div style={{width: 1200, float: "left", left: "50%", transform: "translateX(-50%)", marginTop:50}}>
             <WriteFrm>
                 <p>글 작성하기</p>
                 <Item>
@@ -151,7 +152,7 @@ const Write = () => {
                 <Item>
                     <p>사진</p>
                     <div>
-                        <input type="file" multiple accept="image/*" onChange={onChangeImage} />
+                        <input type="file" multiple accept="image/*" onChange={onChangeImage} required />
                     </div>
                 </Item>
                 <Item>

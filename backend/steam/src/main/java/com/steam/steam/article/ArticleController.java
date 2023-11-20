@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class ArticleController {
                                                     .content(content)
                                                     .price(price)
                                                     .build();
-
+//        List<MultipartFile> images = Arrays.stream(image).toList();
         articleService.createArticle(requestDto, images);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
@@ -62,6 +63,18 @@ public class ArticleController {
         return ResponseEntity.ok().body(article);
     }
 
+    @GetMapping("/article/heart/{article_id}/{user_id}")
+    public ResponseEntity<Object> getHeartStatusById(@PathVariable Long article_id, @PathVariable String user_id) {
+        String message = articleService.getHeartStatusDetail(article_id, user_id);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
+    }
+
+    @GetMapping("/article/purchaseRequest/{article_id}/{user_id}")
+    public ResponseEntity<Object> getPurchaseRequestStatusById(@PathVariable Long article_id, @PathVariable String user_id) {
+        String message = articleService.getPurchaseRequestStatusDetail(article_id, user_id);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
+    }
+
     @GetMapping("/article/search")
     public ResponseEntity<List<ArticleSummary>> searchEntities(
             @RequestParam("region") String region,
@@ -79,7 +92,7 @@ public class ArticleController {
         return new ResponseEntity<>(like, HttpStatus.OK);
     }
 
-    @PostMapping("/article/purchase")
+    @PostMapping("/article/purchase/request")
     public ResponseEntity determinePurchase(@RequestBody PurchaseRequestDto purchaseRequestDto){
         String purchase = articleService.changePurchaseStatus(purchaseRequestDto);
         return new ResponseEntity<>(purchase, HttpStatus.OK);

@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentService {
-    private final CommentRepository commentRepository;
+    private final CommentsRepository commentRepository;
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
 
@@ -35,6 +35,7 @@ public class CommentService {
     }
 
     public List<Comment> getAllComment(Long articleId) {
-        return commentRepository.findAllById(articleId);
+        Article article = articleRepository.getReferenceById(articleId);
+        return commentRepository.findAllByArticle(article);
     }
 }

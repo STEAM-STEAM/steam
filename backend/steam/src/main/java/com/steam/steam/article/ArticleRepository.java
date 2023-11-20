@@ -22,6 +22,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByPriceBetweenOrderByCreatedTimeDesc(Integer minPrice, Integer maxPrice);
 
-    List<Article> findByUser(User user);
+    List<Article> findAllByUser(User user);
 
 }
