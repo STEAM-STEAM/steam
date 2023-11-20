@@ -12,7 +12,7 @@ public class Keyword {
     @Column(name = "keyword_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
     private String keyword;
