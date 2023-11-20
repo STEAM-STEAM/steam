@@ -39,6 +39,7 @@ const Header = () => {
     return (
         <HeaderContainer>
             <Container>
+                {user && user.userId == 'admin' && <Link to='/admin'>관리자페이지</Link>}
                 {!user && <Link to="/login">로그인</Link>}
                 {!user && <Link to="/join">회원가입</Link>}
                 {user && <Link to="/mypage">마이페이지</Link>}
