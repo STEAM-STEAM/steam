@@ -25,7 +25,7 @@ public class ArticleService {
     private final PurchaseRequestRepository purchaseRequestRepository;
     private final HistoryRepository historyRepository;
 
-    private static final Path articleImageDir = Path.of("images/article/");
+    private static final Path articleImageDir = Path.of("./images/article/");
     private final FileStorageService fileStorageService;
 
     @Autowired
@@ -54,7 +54,7 @@ public class ArticleService {
         }
 
         fileStorageService.storeImages(images, filePaths);
-        filePaths.forEach(path -> article.setImgDir(imageDir));
+        filePaths.forEach(path -> article.setImgDir(imageDir.resolve(String.valueOf(id))));
 
         return id;
     }
