@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class ArticleController {
                                                     .content(content)
                                                     .price(price)
                                                     .build();
-
+//        List<MultipartFile> images = Arrays.stream(image).toList();
         articleService.createArticle(requestDto, images);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
