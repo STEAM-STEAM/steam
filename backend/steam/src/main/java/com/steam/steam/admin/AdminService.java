@@ -22,7 +22,7 @@ public class AdminService {
 
         return users.stream()
                 .filter(user -> !"admin".equals(user.getId()))
-                .map(user -> new UserIdNicknameDto(user.getId(), user.getNickname()))
+                .map(user -> new UserIdNicknameDto(user.getId(), user.getNickname(), user.getProfileImgUrl(), user.getRegion().toString()))
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +38,7 @@ public class AdminService {
         List<User> blacklist = userRepository.findByBlacklistedTrue();
 
         return blacklist.stream()
-                .map(user -> new UserIdNicknameDto(user.getId(), user.getNickname()))
+                .map(user -> new UserIdNicknameDto(user.getId(), user.getNickname(), user.getProfileImgUrl(), user.getRegion().toString()))
                 .collect(Collectors.toList());
     }
 }
