@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
 import Modal from 'react-modal';
 import axios from "axios";
+import Comment from "../components/detailComment";
 
 const Container = styled.div`
     width: 100%;
@@ -103,20 +104,20 @@ const customModalStyles = {
 
 const publicUrl = process.env.PUBLIC_URL+"/assets/images/";
 
-const Info = () => {
+const Info = ({ data }) => {
     return (
         <div style={{paddingBottom:10, width: "100%", float: "left",paddingTop: 5, fontSize: 14, color: "#999"}}>
             <div style={{float: "left", marginRight: 20}}>
                 <Icon className="material-symbols-outlined">favorite</Icon>
-                <Text>4</Text>
+                <Text>{data.heartCount}</Text>
             </div>
             <div style={{float: "left", marginRight: 20}}>
                 <Icon className="material-symbols-outlined">visibility</Icon>
-                <Text>4</Text>
+                <Text>0</Text>
             </div>
             <div style={{float: "left", marginRight: 20}}>
                 <Icon className="material-symbols-outlined">schedule</Icon>
-                <Text>2023.11.16</Text>
+                <Text>{data.createdTime}</Text>
             </div>
         </div>
     );
@@ -141,19 +142,7 @@ const CommentItem = () => {
     );
 };
 
-const Comment = () => {
-    return(
-        <div style={{float: "left", width: "100%", padding: "20px 30px"}}>
-            <p style={{fontSize: 20, fontWeight: 500, marginBottom: 10}}>댓글</p>
-            <textarea 
-                placeholder="댓글을 입력해주세요." 
-                style={{width: "100%", height: 100, padding: "10px 20px"}}
-            >
-            </textarea>
-            <button style={{float: "right", height: 30, width: 100}}>등록하기</button>
-        </div>
-    );
-};
+
 
 
 const Detail = () => {
@@ -163,18 +152,14 @@ const Detail = () => {
 
     const [articleData, setArticleData] = useState({});
 
-    axios.get(`http://localhost:8080/api/articles/${articleId}`).then((response) => {
-        setArticleData(response.data);
-    }).catch((err) => {
-        console.log(err);
-    });
-
-    // const images = [
-    //     { url: publicUrl+"image2.png" },
-    //     { url: publicUrl+"images/2.jpg" },
-    //     { url: publicUrl+"images/3.jpg" },
-    //     { url: publicUrl+"images/4.jpg" }
-    // ];
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
+            console.log(response.data);
+            setArticleData(response.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, []);
 
     const [modalOpen, setModalOpen] = useState(false);
     const [sellModalOpen, setSellModalOpen] = useState(false);
@@ -216,18 +201,6 @@ const Detail = () => {
                             <p>유저1</p>
                             <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
                         </div>
-                        {/* <div>
-                            <p>유저1</p>
-                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
-                        </div>
-                        <div>
-                            <p>유저1</p>
-                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
-                        </div>
-                        <div>
-                            <p>유저1</p>
-                            <button style={{border: "solid 1px #1DA1F2", color:"#1DA1F2", background:"#fff"}}>확정</button>
-                        </div> */}
                     </List>
                     <button style={{width: 100, height: 40, background: "#1DA1F2", color: "#fff", border: "solid 1px #fff"}} onClick={() => setSellModalOpen(false)}>취소</button>
                 </div>
@@ -254,13 +227,13 @@ const Detail = () => {
                 <p style={{fontSize: 25, fontWeight: 500, marginTop: 50, color: "#333"}}>상품 상세</p>
                 <Container>
                     <div style={{width: "40%", float: "left", paddingLeft: 30}}>
-                        <SimpleImageSlider
+                        {/* <SimpleImageSlider
                             width={"100%"}
                             height={250}
                             images={articleData.imgUrls}
                             showBullets={true}
                             showNavs={true}
-                        />
+                        /> */}
                     </div>
                     <div style={{width: "60%", float: "right", padding: "15px 30px"}}>
                         <p style={{width: "100%", float: "left", color: "#555", borderBottom: "1px solid #ddd", paddingBottom: 10}}>
@@ -273,7 +246,7 @@ const Detail = () => {
                             <span style={{marginLeft: 10, float: "left", fontSize: 20, marginTop: 3}}><b style={{fontSize: 20}}>{articleData.sellerNickname}</b>님의 상품</span>
                         </p>
                         <p style={{fontSize: 23, fontWeight: 500, float: "left", marginTop:10}}>{articleData.title}</p>
-                        <Info />
+                        <Info data={articleData} />
 
                         <p style={{fontSize: 30, fontWeight: 500,marginBottom: 10, float:"left"}}>{parseInt(articleData.price).toLocaleString()}\</p>
 
@@ -300,15 +273,13 @@ const Detail = () => {
                     <div style={{borderBottom: "1px solid #ddd", float: "left", width: "100%"}}></div>
                 </div>
 
-                <div style={{padding: 30, float: "left", borderBottom: "1px solid #111"}}>
+                <div style={{padding: 30, float: "left", borderBottom: "1px solid #111", width: "100%"}}>
                     <p style={{fontSize: 20, fontWeight: 500, marginBottom: 10}}>상품 상세 정보</p>
                     <p>
-                        Aesop 크렘 드 파퓨메 No.01 르 블랑<br/>
-                        (Aesop 크렘 드 파퓨메 1호 르 블랑 50ml + Aesop 사봉 드 파퓨메 1호 르 블랑 65g수분포함 / 45g건조시 + Aesop 크렘 드 파퓨메 트레이 1ea)<br/>
-                        💛포장 뜯지 않은 새 상품이며 박스상태는 사진 참고해주세요
+                        {articleData.content}
                     </p>
                 </div>
-                <Comment />
+                <Comment articleId={articleId} />
                 <CommentItem />
                 <CommentItem />
                 <CommentItem />
