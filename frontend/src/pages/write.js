@@ -95,7 +95,7 @@ const Write = () => {
         }
 
 
-        axios.post('http://localhost:8080/api/article', formData, {
+        axios.post('/api/article', formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
