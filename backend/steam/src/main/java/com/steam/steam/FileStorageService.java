@@ -1,5 +1,6 @@
 package com.steam.steam;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import java.nio.file.*;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FileStorageService {
 
     @Transactional
@@ -15,6 +17,7 @@ public class FileStorageService {
         try {
             Files.createDirectories(filePath.getParent());
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            log.debug("storeImage 완료: ", filePath);
         } catch (Exception e) {
             throw new RuntimeException("Failed to store file", e);
         }

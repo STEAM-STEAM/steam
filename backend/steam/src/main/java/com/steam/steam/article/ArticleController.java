@@ -1,6 +1,7 @@
 package com.steam.steam.article;
 
 import com.steam.steam.article.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api")
 @CrossOrigin("http://localhost:3000")
 public class ArticleController {
@@ -61,12 +63,14 @@ public class ArticleController {
     @GetMapping("/article/{article_id}")
     public ResponseEntity<ArticleDetail> getArticleById(@PathVariable Long article_id) {
         ArticleDetail article = articleService.getArticleDetail(article_id);
+        log.debug("글 상세 정보: ", article);
         return ResponseEntity.ok().body(article);
     }
 
     @GetMapping("/article/images/{articleId}/{order}")
     public ResponseEntity<FileSystemResource> getArticleImage(@PathVariable String articleId, @PathVariable int order) {
         Path imageUrl = articleService.getImageUrl(articleId, order);
+        log.debug("실제 파일 경로: ", imageUrl.toString());
         FileSystemResource fileSystemResource = new FileSystemResource(imageUrl);
         return ResponseEntity.ok().body(fileSystemResource);
     }

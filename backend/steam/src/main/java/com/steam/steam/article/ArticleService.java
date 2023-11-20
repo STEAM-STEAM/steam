@@ -6,6 +6,7 @@ import com.steam.steam.config.AccessPath;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
@@ -54,6 +56,8 @@ public class ArticleService {
             filePaths.add(imageDir.resolve(i + ".jpg"));
             article.setImgDir(Path.of(AccessPath.ARTICLE_API_PATH.get()).resolve(String.valueOf(id))
                                                                         .resolve(String.valueOf(i)));
+            log.debug("글 저장 과정에서 setImgDir: ", Path.of(AccessPath.ARTICLE_API_PATH.get()).resolve(String.valueOf(id))
+                    .resolve(String.valueOf(i)));
         }
         fileStorageService.storeImages(images, filePaths);
 
