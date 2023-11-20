@@ -8,7 +8,7 @@ public record ArticleDetail(
         Integer price,
         String sellerNickname,
         String sellerId,
-        List<String> imgLinkUrl,
+        List<String> imgLinkUrls,
         Integer heartCount,
         String createdTime
 ) {}
