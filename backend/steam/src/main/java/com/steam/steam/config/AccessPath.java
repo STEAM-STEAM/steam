@@ -1,7 +1,8 @@
 package com.steam.steam.config;
 
 public enum AccessPath {
-    USER_PROFILE("/assets/steam-images/user/");
+
+    ARTICLE_API_PATH("/api/article/images/");
 
     private final String path;
 

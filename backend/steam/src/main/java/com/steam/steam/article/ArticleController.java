@@ -2,6 +2,7 @@ package com.steam.steam.article;
 
 import com.steam.steam.article.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -61,6 +63,14 @@ public class ArticleController {
         ArticleDetail article = articleService.getArticleDetail(article_id);
         return ResponseEntity.ok().body(article);
     }
+
+    @GetMapping("/article/images/{articleId}/{order}")
+    public ResponseEntity<FileSystemResource> getArticleImage(@PathVariable String articleId, @PathVariable int order) {
+        Path imageUrl = articleService.getImageUrl(articleId, order);
+        FileSystemResource fileSystemResource = new FileSystemResource(imageUrl);
+        return ResponseEntity.ok().body(fileSystemResource);
+    }
+
 
     @GetMapping("/article/search")
     public ResponseEntity<List<ArticleSummary>> searchEntities(

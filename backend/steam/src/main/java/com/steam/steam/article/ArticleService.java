@@ -2,6 +2,7 @@ package com.steam.steam.article;
 
 import com.steam.steam.FileStorageService;
 import com.steam.steam.article.dto.*;
+import com.steam.steam.config.AccessPath;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
 import com.steam.steam.user.UserRepository;
@@ -51,10 +52,10 @@ public class ArticleService {
         List<Path> filePaths = new ArrayList<>();
         for(int i=0; i<images.size(); i++) {
             filePaths.add(imageDir.resolve(i + ".jpg"));
+            article.setImgDir(Path.of(AccessPath.ARTICLE_API_PATH.get()).resolve(String.valueOf(id))
+                                                                        .resolve(String.valueOf(i)));
         }
-
         fileStorageService.storeImages(images, filePaths);
-        filePaths.forEach(path -> article.setImgDir(imageDir.resolve(String.valueOf(id))));
 
         return id;
     }
@@ -237,5 +238,9 @@ public class ArticleService {
         User user = userRepository.getReferenceById(userId);
         List<Article> articles = articleRepository.findByUser(user);
         articleRepository.deleteAll(articles);
+    }
+
+    public Path getImageUrl(String articleId, int order) {
+        return articleImageDir.resolve(articleId).resolve(String.valueOf(order)).resolve(".jpg");
     }
 }
