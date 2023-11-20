@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 import SimpleImageSlider from "react-simple-image-slider";
@@ -162,12 +162,26 @@ const Detail = () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
     const [articleData, setArticleData] = useState({});
+<<<<<<< Updated upstream
 
     axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
+=======
+    const [imgLinkUrls, setImgLinkUrls] = useState({});
+    
+    useEffect(() => {
+    axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
+        console.log(response.data)    
+>>>>>>> Stashed changes
         setArticleData(response.data);
+        const imgList = response.data.imgLinkUrls;
+
+        const modifiedArray = imgList.map(obj => ({ url: obj[Object.keys(obj)[0]] }));
+        setImgLinkUrls(modifiedArray);
+
     }).catch((err) => {
         console.log(err);
     });
+}, []);
 
     // const images = [
     //     { url: publicUrl+"image2.png" },
@@ -257,7 +271,7 @@ const Detail = () => {
                         <SimpleImageSlider
                             width={"100%"}
                             height={250}
-                            images={articleData.imgUrls}
+                            images={imgLinkUrls}
                             showBullets={true}
                             showNavs={true}
                         />

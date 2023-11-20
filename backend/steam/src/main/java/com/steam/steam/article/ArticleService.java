@@ -238,4 +238,26 @@ public class ArticleService {
         List<Article> articles = articleRepository.findAllByUser(user);
         articleRepository.deleteAll(articles);
     }
+
+    public String getHeartStatusDetail(Long articleId, String userId) {
+        User user = userRepository.getReferenceById(userId);
+        Article article = articleRepository.getReferenceById(articleId);
+        List<Heart> byUserAndArticle = heartRepository.findByUserAndArticle(user, article);
+
+        if(byUserAndArticle.size() == 0){
+            return "No";
+        }
+        return "Yes";
+    }
+
+    public String getPurchaseRequestStatusDetail(Long articleId, String userId) {
+        User user = userRepository.getReferenceById(userId);
+        Article article = articleRepository.getReferenceById(articleId);
+        List<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByUserAndArticle(user, article);
+
+        if(purchaseRequests.size() == 0){
+            return "No";
+        }
+        return "Yes";
+    }
 }
