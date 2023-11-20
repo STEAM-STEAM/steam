@@ -63,6 +63,18 @@ public class ArticleController {
         return ResponseEntity.ok().body(article);
     }
 
+    @GetMapping("/article/heart/{article_id}/{user_id}")
+    public ResponseEntity<Object> getHeartStatusById(@PathVariable Long article_id, @PathVariable String user_id) {
+        String message = articleService.getHeartStatusDetail(article_id, user_id);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
+    }
+
+    @GetMapping("/article/purchaseRequest/{article_id}/{user_id}")
+    public ResponseEntity<Object> getPurchaseRequestStatusById(@PathVariable Long article_id, @PathVariable String user_id) {
+        String message = articleService.getPurchaseRequestStatusDetail(article_id, user_id);
+        return ResponseEntity.ok().body(new MessageResponseDto(message));
+    }
+
     @GetMapping("/article/search")
     public ResponseEntity<List<ArticleSummary>> searchEntities(
             @RequestParam("region") String region,
