@@ -17,6 +17,21 @@ spring:
       max-file-size: 10GB
       max-request-size: 10GB
 
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /api-docs/json
+  cache:
+    disabled: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    operations-sorter: alpha
+    path: /api-docs
+    tags-sorter: alpha
+  version: v1.0.0
+
 server:
   tomcat:
     max-http-form-post-size: 10GB
