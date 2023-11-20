@@ -2,9 +2,6 @@ import React, {useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import axios from 'axios'
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPlus, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
-import Login from "./login";
 
 const WriteFrm = styled.form`
     width: 100%;
@@ -59,48 +56,76 @@ const Btn = styled.button`
 `;
 
 const Write = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
 
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [content, setContent] = useState('서울');
-    const [nickname, setNickname] = useState('');
     const [images, setImages] = useState([]);
 
     const onChangeImage = (e) => {
-        // const imageLists = e.target.files;
-        // let imageUrlLists = [...images];
-    
-        // for (let i = 0; i < imageLists.length; i++) {
-        //     const currentImageUrl = URL.createObjectURL(imageLists[i]);
-        //     imageUrlLists.push(currentImageUrl);
-        // }
-    
-        // if (imageUrlLists.length > 10) {
-        //     imageUrlLists = imageUrlLists.slice(0, 10);
-        // }
-    
-        // setImages(imageUrlLists);
+        const files = e.target.files;
+        if (files == null) {
+            return;
+        }
+        setImages(files);
     };
 
-    // useEffect(() => {
-    //     console.log(userId, pw, region, nickname);
-    // }
-    // , [userId, pw, region, nickname]);
+    const write = () => {
+        const formData = new FormData();
+        formData.append("userId", user.userId);
+        formData.append("title", title);
+        formData.append("content", content);
+        formData.append("price", price);
 
-//     const Write = () => {
-//         axios.post('http://localhost:8080/api/article', {
-//             userId: "",
-//             title: title,
-//             content: content,
-//             price: Number(price),
-//             imgUrls: images,
-//         },
-//         {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         })
-//     }
+
+        let imageUrls = [];
+        for (let i = 0; i < images.length; i++) {
+            // imageUrls.push(images[i]);
+            formData.append("image", images[i]);
+        }
+
+        // formData.append("image", imageUrls);
+
+        console.log(formData.get("image"))
+
+        let entries = formData.entries();
+        for (const pair of entries) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+
+
+        axios.post('http://localhost:8080/api/article', formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }).then((response) => {
+            if (response.data.message == "success") {
+                alert("게시글이 등록되었습니다.");
+                window.location.replace("/");
+            } else {
+                alert("게시글 등록에 실패하였습니다.");
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        // axios.post('http://localhost:8080/api/article', {
+        //     userId: user.userId,
+        //     title: title,
+        //     content: content,
+        //     price: price,
+        //     imgUrls: images,
+        // }).then((response) => {
+        //     if (response.data.message == "success") {
+        //         alert("게시글이 등록되었습니다.");
+        //     } else {
+        //         alert("게시글 등록에 실패하였습니다.");
+        //     }
+        // }).catch((err) => {
+        //     console.log(err);
+        // });
+    }
 
     return (
         <div style={{width: 1200, float: "left", left: "50%", transform: "translateX(-50%)"}}>
@@ -131,7 +156,7 @@ const Write = () => {
                     </div>
                 </Item>
                 <Item>
-                    <Btn onClick={() => Write()}>등록하기</Btn>
+                    <Btn type="button" onClick={write}>등록하기</Btn>
                 </Item>
             </WriteFrm>
         </div>

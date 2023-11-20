@@ -7,11 +7,27 @@ logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
 
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /api-docs/json
+  cache:
+    disabled: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    operations-sorter: alpha
+    path: /api-docs
+    tags-sorter: alpha
+  version: v1.0.0
+
+
 ---
 spring:
   config:
       activate:
-        on-profile: "dev"
+        on-profile: "test"
   servlet:
     multipart:
       max-file-size: 10GB
@@ -29,6 +45,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
 
+# dev 프로파일 설정
 ---
 spring:
   config:

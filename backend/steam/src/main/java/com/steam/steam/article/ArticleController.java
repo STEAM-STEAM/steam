@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("http://localhost:3000")
 public class ArticleController {
     private final ArticleService articleService;
 
@@ -36,7 +37,7 @@ public class ArticleController {
                                                     .content(content)
                                                     .price(price)
                                                     .build();
-
+//        List<MultipartFile> images = Arrays.stream(image).toList();
         articleService.createArticle(requestDto, images);
 
         return ResponseEntity.ok().body(new MessageResponseDto("success"));
@@ -62,7 +63,12 @@ public class ArticleController {
     }
 
     @GetMapping("/article/search")
-    public ResponseEntity<List<ArticleSummary>> searchEntities(@RequestBody SearchRequestDto requestDto) {
+    public ResponseEntity<List<ArticleSummary>> searchEntities(
+            @RequestParam("region") String region,
+            @RequestParam("keyword") String keyword,
+            @RequestParam("minPrice") Integer minPrice,
+            @RequestParam("maxPrice") Integer maxPrice) {
+        SearchRequestDto requestDto = new SearchRequestDto(region, keyword, minPrice, maxPrice);
         List<ArticleSummary> articles = articleService.getRecentArticlesOnSearch(requestDto);
         return ResponseEntity.ok().body(articles);
     }
