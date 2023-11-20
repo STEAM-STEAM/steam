@@ -199,7 +199,7 @@ const Join = () => {
                     </div>
                 </Item>
                 <Item>
-                    <p>프로필 사진</p>
+                    <p>프로필 사진<span style={{color: "red"}}> *</span></p>
                     <div style={{float:"left"}}>
                         <Label>
                             이미지 선택
@@ -208,6 +208,7 @@ const Join = () => {
                                 type="file" 
                                 accept="image/*" 
                                 onChange={onChangeImage} 
+                                required
                             />
                         </Label>
                         <span style={{paddingLeft: 10, lineHeight: "35px"}}>{imageName}</span>

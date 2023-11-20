@@ -28,9 +28,6 @@ public class Article {
 
     private LocalDateTime createdTime;
 
-    @OneToMany(mappedBy = "article")
-    private List<Comment> comments = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
@@ -40,6 +37,11 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private Region region;
     private Integer heartCount;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Heart> hearts = new ArrayList<>();
 
     public Article(String title, String content, Integer price, User user) {
         this.title = title;

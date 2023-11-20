@@ -35,6 +35,7 @@ public class CommentService {
     }
 
     public List<Comment> getAllComment(Long articleId) {
-        return commentRepository.findAllById(articleId);
+        Article article = articleRepository.getReferenceById(articleId);
+        return commentRepository.findAllByArticle(article);
     }
 }

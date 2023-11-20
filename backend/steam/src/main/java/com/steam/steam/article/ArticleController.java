@@ -92,7 +92,7 @@ public class ArticleController {
         return new ResponseEntity<>(like, HttpStatus.OK);
     }
 
-    @PostMapping("/article/purchase")
+    @PostMapping("/article/purchase/request")
     public ResponseEntity determinePurchase(@RequestBody PurchaseRequestDto purchaseRequestDto){
         String purchase = articleService.changePurchaseStatus(purchaseRequestDto);
         return new ResponseEntity<>(purchase, HttpStatus.OK);

@@ -58,10 +58,10 @@ const options = [
 
 // 검색 컴포넌트
 const Search = ({ onDataChange }) => {
-    const [region, setRegion] = useState('');
+    const [region, setRegion] = useState('null');
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
-    const [searchWord, setSearchWord] = useState('');
+    const [searchWord, setSearchWord] = useState('null');
 
     // 검색 버튼을 눌렀을 때
     const search = () => {
