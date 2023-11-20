@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@fortawesome/free-regular-svg-icons";
 
 const Item = styled.div`
     width: calc((100% - 60px) / 4);
@@ -41,11 +39,11 @@ const MainItem = ({ articleId, title, price, userNickname, imgLinkUrl }) => {
 
     return (
         <Item>
-            <Link to="/detail">
+            <Link to={`/detail/${articleId}`}>
                 <img src={`${publicUrl}/assets/images/${imgLinkUrl}`} alt="img" />
                 <div>
                     <p>
-                        {/* <FontAwesomeIcon icon={faUser} />  */}
+                        <span className="material-symbols-outlined">person</span>
                         {userNickname}
                     </p>
                     <p>{title}</p>

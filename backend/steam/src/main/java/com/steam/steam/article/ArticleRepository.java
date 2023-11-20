@@ -15,6 +15,13 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findByRegionAndContentContainingAndPriceBetweenOrderByCreatedTimeDesc
             (Region region, String keyword, Integer minPrice, Integer maxPrice);
 
+    List<Article> findByContentContainingAndPriceBetweenOrderByCreatedTimeDesc
+            (String keyword, Integer minPrice, Integer maxPrice);
+
+    List<Article> findByRegionAndPriceBetweenOrderByCreatedTimeDesc(Region region, Integer minPrice, Integer maxPrice);
+
+    List<Article> findByPriceBetweenOrderByCreatedTimeDesc(Integer minPrice, Integer maxPrice);
+
     List<Article> findByUser(User user);
 
 }
