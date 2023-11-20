@@ -1,5 +1,6 @@
 package com.steam.steam.article;
 
+import com.steam.steam.comment.Comment;
 import com.steam.steam.user.Region;
 import com.steam.steam.user.User;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,7 +28,10 @@ public class Article {
 
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article")
+    private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

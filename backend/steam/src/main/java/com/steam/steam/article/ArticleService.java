@@ -214,7 +214,7 @@ public class ArticleService {
 
     public List<ArticleSummary> getArticlesOfSellByUser(String userId) {
         User user = userRepository.getReferenceById(userId);
-        List<Article> articles = articleRepository.findByUser(user);
+        List<Article> articles = articleRepository.findAllByUser(user);
         return articleMapper.toArticleSummaries(articles);
     }
 
@@ -235,7 +235,7 @@ public class ArticleService {
     @Transactional
     public void deleteArticles(String userId) {
         User user = userRepository.getReferenceById(userId);
-        List<Article> articles = articleRepository.findByUser(user);
+        List<Article> articles = articleRepository.findAllByUser(user);
         articleRepository.deleteAll(articles);
     }
 }

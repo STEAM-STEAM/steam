@@ -91,7 +91,7 @@ const Write = () => {
 
         let entries = formData.entries();
         for (const pair of entries) {
-            console.log(pair[0]+ ', ' + pair[1]); 
+            console.log(pair[0]+ ' ' + pair[1]); 
         }
 
 

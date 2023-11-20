@@ -163,7 +163,7 @@ const Detail = () => {
 
     const [articleData, setArticleData] = useState({});
 
-    axios.get(`http://localhost:8080/api/articles/${articleId}`).then((response) => {
+    axios.get(`http://localhost:8080/api/article/${articleId}`).then((response) => {
         setArticleData(response.data);
     }).catch((err) => {
         console.log(err);
